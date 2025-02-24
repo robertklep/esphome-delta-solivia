@@ -1,4 +1,4 @@
-# Delta Solivia RS485 component for ESPHome v2
+# Delta Solivia RS485 component for ESPHome
 
 This component for ESPHome can be used to directly read measurement/statistics data from the RS485 port of _some_ Delta Solivia inverters. It does not require having a Solivia Gateway device, but will work if you have one.
 
@@ -62,7 +62,7 @@ If you don't have the necessary tools to crimp Ethernet cables, or you just want
 ```
 # Load as external component
 external_components:
-  - source: github://robertklep/my-esphome-components@v2.0.1
+  - source: github://robertklep/esphome-delta-solivia@v2.0.1
     components: [ delta_solivia ]
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
