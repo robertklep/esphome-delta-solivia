@@ -60,6 +60,13 @@ If you don't have the necessary tools to crimp Ethernet cables, or you just want
 ## ESPHome setup
 
 ```
+# Set the correct build flags
+esphome:
+  ...
+  platformio_options:
+    build_unflags: '-std=c++11 -std=gnu++11'
+    build_flags: '-std=c++17 -std=gnu++17'
+
 # Load as external component
 external_components:
   - source: github://robertklep/esphome-delta-solivia@v2.0.1

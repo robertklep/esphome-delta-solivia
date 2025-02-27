@@ -1,6 +1,9 @@
 esphome:
   name: 'delta-solivia-reader'
   friendly_name: 'Delta Solivia Reader'
+  platformio_options:
+    build_unflags: '-std=c++11 -std=gnu++11'
+    build_flags: '-std=c++17 -std=gnu++17'
 
 external_components:
   - source: github://robertklep/my-esphome-components@v2.0.1
