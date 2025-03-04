@@ -55,24 +55,28 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 3;
         // Software Revision reserved Major, Minor, Bug fixing 3 Byte
         pos += 3;
+
         // Solar power at input 1 W 2[UINT16] 1 = 1W
         pos += 2;
         // Solar voltage at input 1 V 2[UINT16] 1 = 1V
         pos += 2;
         // Solar current at input 1 A 2[UINT16] 1 = 0,1A
         pos += 2;
+
         // Solar power at input 2 W 2[UINT16] 1 = 1W
         pos += 2;
         // Solar voltage at input 2 V 2[UINT16] 1 = 1V
         pos += 2;
         // Solar current at input 2 A 2[UINT16] 1 = 0,1A
         pos += 2;
+
         // Solar power at input 3 W 2[UINT16] 1 = 1W
         pos += 2;
         // Solar voltage at input 3 V 2[UINT16] 1 = 1V
         pos += 2;
         // Solar current at input 3 A 2[UINT16] 1 = 0,1A
         pos += 2;
+
         // AC current - L1 A 2[UINT16] 1 = 0,1A
         pos += 2;
         // AC voltage - L1 V 2[UINT16] 1= 1V
@@ -83,6 +87,7 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 2;
         // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
         pos += 2;
+
         // AC current – L2 A 2[UINT16] 1 = 0,1A
         pos += 2;
         // AC voltage – L2 V 2[UINT16] 1= 1V
@@ -93,6 +98,7 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 2;
         // AC reactive power – L2 VAR 2[INT16] 1 = 1VAR
         pos += 2;
+
         // AC current – L3 A 2[UINT16] 1 = 0,1A
         pos += 2;
         // AC voltage – L3 V 2[UINT16] 1= 1V
@@ -103,6 +109,7 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 2;
         // AC reactive power – L3 VAR 2[INT16] 1 = 1VAR
         pos += 2;
+
         // solar isolation plus kOhm 2[UINT16] 1 = 1kOhm
         pos += 2;
         // solar isolation minus kOhm 2[UINT16] 1 = 1kOhm
@@ -112,8 +119,6 @@ class FrameParserVariant53 : public IFrameParser {
         // Temperature heatsink °C 2[INT16] 1 = 1°C
         pos += 2;
         // Supplied ac energy total Wh 8[UINT64] 1 = 1Wh
-        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TODAY,
-                        extract_int64(&frame[pos]));  // Wh
         pos += 8;
         // Inverter runtime total Minutes 4[UINT32] 1 = 1 minute
         pos += 4;
@@ -134,7 +139,9 @@ class FrameParserVariant53 : public IFrameParser {
         // Internal status 4 4[UINT32] reserved bit description
         pos += 4;
         // Supplied ac energy day Wh 8[UINT64] 1 = 1Wh
-        pos += 4;
+        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TODAY,
+            extract_int64(&frame[pos]));  // Wh        
+        pos += 8;
         // Inverter runtime day Minutes 4[UINT32] 1 = 1 minute
         pos += 4;
         // reserved 67
