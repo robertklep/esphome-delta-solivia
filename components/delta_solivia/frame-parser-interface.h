@@ -27,9 +27,9 @@ class IFrameParser {
     }
 
     uint64_t extract_int64(const uint8_t *data) {
-        return (data[0] << 56) | (data[1] << 48) | (data[2] << 40) |
-               (data[3] << 32) | (data[4] << 24) | (data[5] << 16) |
-               (data[6] << 8) | data[7];
+        return ((uint64_t)data[0] << 56) | ((uint64_t)data[1] << 48) | ((uint64_t)data[2] << 40) |
+               ((uint64_t)data[3] << 32) | ((uint64_t)data[4] << 24) | ((uint64_t)data[5] << 16) |
+               ((uint64_t)data[6] << 8) | (uint64_t)data[7];
     }
 
     std::string parse_string(const uint8_t *frame, std::size_t pos,

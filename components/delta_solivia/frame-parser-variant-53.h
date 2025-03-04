@@ -139,9 +139,6 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 4;
         // reserved 67
     }
-
-   public:
-    FrameParserVariant53() {}
 };
 
 }  // namespace delta_solivia
