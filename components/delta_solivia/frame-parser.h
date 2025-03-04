@@ -4,6 +4,7 @@
 
 #include "frame-parser-interface.h"
 #include "frame-parser-variant-15.h"
+#include "frame-parser-variant-53.h"
 #include "frame-parser-variant-212.h"
 
 namespace esphome {
