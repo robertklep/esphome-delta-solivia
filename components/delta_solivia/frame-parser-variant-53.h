@@ -107,26 +107,34 @@ class FrameParserVariant53 : public IFrameParser {
         publish_sensor_(CONF_INV_RUNTIME_TOTAL, extract_int32(&frame[pos]));
         pos += 4;
         // Status 1 4[UINT32] bit description
+        publish_sensor_("status_1", extract_int32(&frame[pos])); 
         pos += 4;
         // Status 2 4[UINT32] bit description
+        publish_sensor_("status_2", extract_int32(&frame[pos])); 
         pos += 4;
         // Status 3 4[UINT32] bit description
+        publish_sensor_("status_3", fextract_int32(&frame[pos])); 
         pos += 4;
         // Status 4 4[UINT32] bit description
+        publish_sensor_("status_4", extract_int32(&frame[pos])); 
         pos += 4;
-        // Internal status 1 4[UINT32] reserved bit description
+        // Internal status 1 4[UIT32] reserved bit description
+        publish_sensor_("internal_status_1", extract_int32(&frame[pos])); 
         pos += 4;
         // Internal status 2 4[UINT32] reserved bit description
+        publish_sensor_("internal_status_2", extract_int32(&frame[pos])); 
         pos += 4;
         // Internal status 3 4[UINT32] reserved bit description
+        publish_sensor_("internal_status_3", extract_int32(&frame[pos])); 
         pos += 4;
         // Internal status 4 4[UINT32] reserved bit description
+        publish_sensor_("internal_status_4", extract_int32(&frame[pos])); 
         pos += 4;
         // Supplied ac energy day Wh 8[UINT64] 1 = 1Wh
         publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TODAY, extract_int64(&frame[pos]));  // Wh        
         pos += 8;
         // Inverter runtime day Minutes 4[UINT32] 1 = 1 minute
-        publish_sensor_(CONF_INV_RUNTIME_TODAY, extract_int32(&frame[pos]));
+        publish_sensor_(CONF_INV_RUNTIME_TODAY, extract_int32(&frame[pos])*60);
         pos += 4;
         // reserved 67
     }
