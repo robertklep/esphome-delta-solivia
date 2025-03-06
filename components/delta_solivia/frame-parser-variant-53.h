@@ -113,7 +113,7 @@ class FrameParserVariant53 : public IFrameParser {
         publish_sensor_("status_2", extract_int32(&frame[pos])); 
         pos += 4;
         // Status 3 4[UINT32] bit description
-        publish_sensor_("status_3", fextract_int32(&frame[pos])); 
+        publish_sensor_("status_3", extract_int32(&frame[pos])); 
         pos += 4;
         // Status 4 4[UINT32] bit description
         publish_sensor_("status_4", extract_int32(&frame[pos])); 
