@@ -89,16 +89,22 @@ class FrameParserVariant53 : public IFrameParser {
         
     
         // solar isolation plus kOhm 2[UINT16] 1 = 1kOhm
+        publish_sensor_(CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1, extract_int16(&frame[pos]) * 1000); // kOhms
         pos += 2;
         // solar isolation minus kOhm 2[UINT16] 1 = 1kOhm
+        publish_sensor_(CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1, extract_int16(&frame[pos]) * 1000.0); // kOhms
         pos += 2;
         // Temperature amb °C 2[INT16] 1 = 1°C
+        publish_sensor_("ambient_temp", extract_int16(&frame[pos])); // C
         pos += 2;
         // Temperature heatsink °C 2[INT16] 1 = 1°C
+        publish_sensor_("heatsink_temp", extract_int16(&frame[pos])); // C
         pos += 2;
         // Supplied ac energy total Wh 8[UINT64] 1 = 1Wh
+        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TOTAL, extract_int64(&frame[pos])); // kWh
         pos += 8;
         // Inverter runtime total Minutes 4[UINT32] 1 = 1 minute
+        publish_sensor_(CONF_INV_RUNTIME_TOTAL, extract_int32(&frame[pos]));
         pos += 4;
         // Status 1 4[UINT32] bit description
         pos += 4;
@@ -117,10 +123,10 @@ class FrameParserVariant53 : public IFrameParser {
         // Internal status 4 4[UINT32] reserved bit description
         pos += 4;
         // Supplied ac energy day Wh 8[UINT64] 1 = 1Wh
-        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TODAY,
-            extract_int64(&frame[pos]));  // Wh        
+        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TODAY, extract_int64(&frame[pos]));  // Wh        
         pos += 8;
         // Inverter runtime day Minutes 4[UINT32] 1 = 1 minute
+        publish_sensor_(CONF_INV_RUNTIME_TODAY, extract_int32(&frame[pos]));
         pos += 4;
         // reserved 67
     }
