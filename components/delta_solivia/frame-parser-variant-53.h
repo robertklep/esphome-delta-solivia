@@ -56,26 +56,18 @@ class FrameParserVariant53 : public IFrameParser {
         // Software Revision reserved Major, Minor, Bug fixing 3 Byte
         pos += 3;
 
-        // Solar power at input 1 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 1 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 1 A 2[UINT16] 1 = 0,1A
-        pos += 2;
 
-        // Solar power at input 2 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 2 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 2 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-
-        // Solar power at input 3 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 3 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 3 A 2[UINT16] 1 = 0,1A
-        pos += 2;
+        for (int input = 1; input <= 3; ++input) {
+            // Solar power at input 1 W 2[UINT16] 1 = 1W
+            publish_sensor_(CONF_INV_SOLAR_POWER_PREFIX + std::to_string(input), extract_int16(&frame[pos])); // W
+            pos += 2;
+            // Solar voltage at input 1 V 2[UINT16] 1 = 1V
+            publish_sensor_(CONF_INV_SOLAR_VOLTAGE_PREFIX + std::to_string(input), extract_int16(&frame[pos])); // Volts
+            pos += 2;
+            // Solar current at input 1 A 2[UINT16] 1 = 0,1A
+            publish_sensor_(CONF_INV_SOLAR_CURRENT_PREFIX + std::to_string(input), extract_int16(&frame[pos]) * 0.1); // Amps
+            pos += 2;
+        }
 
         // AC current - L1 A 2[UINT16] 1 = 0,1A
         pos += 2;
