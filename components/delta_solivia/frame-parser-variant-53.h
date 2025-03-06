@@ -69,39 +69,25 @@ class FrameParserVariant53 : public IFrameParser {
             pos += 2;
         }
 
-        // AC current - L1 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage - L1 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency - L1 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power - L1 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
-        // AC current – L2 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage – L2 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency – L2 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power – L2 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power – L2 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
-        // AC current – L3 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage – L3 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency – L3 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power – L3 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power – L3 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
+        for (int phase = 1; phase <= 3; ++phase) {
+            // AC current - L1 A 2[UINT16] 1 = 0,1A
+            publish_sensor_(CONF_INV_AC_CURRENT_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos]) / 10.0); // A
+            pos += 2;
+            // AC voltage - L1 V 2[UINT16] 1= 1V
+            publish_sensor_(CONF_INV_AC_VOLTAGE_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos]) ); // V
+            pos += 2;
+            // AC frequency - L1 Hz 2[UINT16] 1= 0,01Hz
+            publish_sensor_(CONF_INV_AC_FREQ_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos]) / 100.0); // Hz
+            pos += 2;
+            // AC active power - L1 W 2[UINT16] 1 = 1W
+            publish_sensor_(CONF_INV_AC_POWER_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos])); // W
+            pos += 2;
+            // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
+            publish_sensor_("ac_reactive_power_phase_" + std::to_string(phase), extract_int16(&frame[pos])); // W
+            pos += 2;
+        }
+        
+    
         // solar isolation plus kOhm 2[UINT16] 1 = 1kOhm
         pos += 2;
         // solar isolation minus kOhm 2[UINT16] 1 = 1kOhm
