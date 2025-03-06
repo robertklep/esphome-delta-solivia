@@ -56,71 +56,53 @@ class FrameParserVariant53 : public IFrameParser {
         // Software Revision reserved Major, Minor, Bug fixing 3 Byte
         pos += 3;
 
-        // Solar power at input 1 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 1 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 1 A 2[UINT16] 1 = 0,1A
-        pos += 2;
+        for (int input = 1; input <= 2; ++input) {
+            // Solar power at input 1 W 2[UINT16] 1 = 1W
+            publish_sensor_(CONF_INV_SOLAR_POWER_PREFIX + std::to_string(input), extract_int16(&frame[pos])); // W
+            pos += 2;
+            // Solar voltage at input 1 V 2[UINT16] 1 = 1V
+            publish_sensor_(CONF_INV_SOLAR_VOLTAGE_PREFIX + std::to_string(input), extract_int16(&frame[pos])); // Volts
+            pos += 2;
+            // Solar current at input 1 A 2[UINT16] 1 = 0,1A
+            publish_sensor_(CONF_INV_SOLAR_CURRENT_PREFIX + std::to_string(input), extract_int16(&frame[pos]) * 0.1); // Amps
+            pos += 2;
+        }
 
-        // Solar power at input 2 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 2 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 2 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-
-        // Solar power at input 3 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // Solar voltage at input 3 V 2[UINT16] 1 = 1V
-        pos += 2;
-        // Solar current at input 3 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-
-        // AC current - L1 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage - L1 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency - L1 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power - L1 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
-        // AC current – L2 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage – L2 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency – L2 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power – L2 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power – L2 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
-        // AC current – L3 A 2[UINT16] 1 = 0,1A
-        pos += 2;
-        // AC voltage – L3 V 2[UINT16] 1= 1V
-        pos += 2;
-        // AC frequency – L3 Hz 2[UINT16] 1= 0,01Hz
-        pos += 2;
-        // AC active power – L3 W 2[UINT16] 1 = 1W
-        pos += 2;
-        // AC reactive power – L3 VAR 2[INT16] 1 = 1VAR
-        pos += 2;
-
+              // AC Voltage/Current/Power/Frequency (all phases)
+        for (int phase = 1; phase <= 3; ++phase) {
+            // AC current - L1 A 2[UINT16] 1 = 0,1A
+            publish_sensor_(CONF_INV_AC_CURRENT_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos]) / 10.0); // A
+            pos += 2;
+            // AC voltage - L1 V 2[UINT16] 1= 1V
+            publish_sensor_(CONF_INV_AC_VOLTAGE_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos]) ); // V
+            pos += 2;
+            // AC frequency - L1 Hz 2[UINT16] 1= 0,01Hz
+            publish_sensor_("ac_frequency_redundant_phase_" + std::to_string(phase), extract_int16(&frame[pos]) / 100.0); // Hz
+            pos += 2;
+            // AC active power - L1 W 2[UINT16] 1 = 1W
+            publish_sensor_(CONF_INV_AC_POWER_PHASE_PREFIX + std::to_string(phase), extract_int16(&frame[pos])); // W
+            pos += 2;
+            // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
+            pos += 2;
+        }
+        
         // solar isolation plus kOhm 2[UINT16] 1 = 1kOhm
+        publish_sensor_(CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1, extract_int16(&frame[pos]) * 1000); // kOhms
         pos += 2;
         // solar isolation minus kOhm 2[UINT16] 1 = 1kOhm
+        publish_sensor_(CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1, extract_int16(&frame[pos]) * 1000.0); // kOhms
         pos += 2;
         // Temperature amb °C 2[INT16] 1 = 1°C
+        publish_sensor_("ambient_temp", extract_int16(&frame[pos])); // C
         pos += 2;
         // Temperature heatsink °C 2[INT16] 1 = 1°C
+        publish_sensor_("heatsink_temp", extract_int16(&frame[pos])); // C
         pos += 2;
         // Supplied ac energy total Wh 8[UINT64] 1 = 1Wh
+        publish_sensor_(CONF_INV_SUPPLIED_AC_ENERGY_TOTAL, extract_int64(&frame[pos])); // kWh
         pos += 8;
         // Inverter runtime total Minutes 4[UINT32] 1 = 1 minute
+        publish_sensor_(CONF_INV_RUNTIME_TOTAL, extract_int32(&frame[pos]));
         pos += 4;
         // Status 1 4[UINT32] bit description
         pos += 4;
