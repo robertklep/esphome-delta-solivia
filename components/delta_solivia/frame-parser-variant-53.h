@@ -1,6 +1,7 @@
 #pragma once
 
 #include "frame-parser-interface.h"
+#include <string>
 
 namespace esphome {
 namespace delta_solivia {
