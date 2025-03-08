@@ -120,7 +120,7 @@ CONF_INV_MAX_SOLAR_POWER_INPUT_1   = "max_solar_power_input_1"
 CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1 = "min_solar_isolation_resistance_input_1"
 CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1 = "max_solar_isolation_resistance_input_1"
 
-CONF_INV_STATUS_TEXT               = "inverter status"
+CONF_INV_STATUS_TEXT               = "inverter_status"
 
 # supported variants and their parser
 SUPPORTED_VARIANTS = {
