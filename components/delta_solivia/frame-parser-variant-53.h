@@ -175,6 +175,45 @@ class FrameParserVariant53 : public IFrameParser {
         if( (status_1 & 1<<21)> 0) status_text=status_text + "L1 Grid synchronization error ";
         if( (status_1 & 1<<22)> 0) status_text=status_text + "L2 Grid synchronization error ";
         if( (status_1 & 1<<23)> 0) status_text=status_text + "L3 Grid synchronization error ";
+
+        if( (status_2 & 1<<0 ) > 0) status_text=status_text+"PV1 Iso startup failure ";
+        if( (status_2 & 1<<1 ) > 0) status_text=status_text+"PV1 Iso running failure ";
+        if( (status_2 & 1<<2 ) > 0) status_text=status_text+"PV1+ grounding failure ";
+        if( (status_2 & 1<<3 ) > 0) status_text=status_text+"PV1- grounding failure ";
+        if( (status_2 & 1<<4 ) > 0) status_text=status_text+"PV2 Iso startup failure ";
+        if( (status_2 & 1<<5 ) > 0) status_text=status_text+"PV2 Iso running failure ";
+        if( (status_2 & 1<<6 ) > 0) status_text=status_text+"PV2+ grounding failure ";
+        if( (status_2 & 1<<7 ) > 0) status_text=status_text+"PV2- grounding failure ";
+        if( (status_2 & 1<<8 ) > 0) status_text=status_text+"PV3 Iso startup failure ";
+        if( (status_2 & 1<<9 ) > 0) status_text=status_text+"PV3 Iso running failure ";
+        if( (status_2 & 1<<10 ) > 0) status_text=status_text+"PV3+ grounding failure ";
+        if( (status_2 & 1<<11 ) > 0) status_text=status_text+"PV3- grounding failure ";
+        if( (status_2 & 1<<12 ) > 0) status_text=status_text+"PV1 voltage too low failure ";
+        if( (status_2 & 1<<13 ) > 0) status_text=status_text+"PV2 voltage too low failure ";
+        if( (status_2 & 1<<14 ) > 0) status_text=status_text+"PV3 voltage too low failure ";
+        if( (status_2 & 1<<15 ) > 0) status_text=status_text+"Internal failure ";
+        if( (status_2 & 1<<16 ) > 0) status_text=status_text+"Auto test failure ";
+        if( (status_2 & 1<<17 ) > 0) status_text=status_text+"PV power too low failure ";
+
+        if( (status_3 & 1<<0 ) > 0) status_text=status_text+"PV1 Iso startup warning ";
+        if( (status_3 & 1<<1 ) > 0) status_text=status_text+"PV1 Iso running warning ";
+        if( (status_3 & 1<<2 ) > 0) status_text=status_text+"PV1+ grounding warning ";
+        if( (status_3 & 1<<3 ) > 0) status_text=status_text+"PV1- grounding warning ";
+        if( (status_3 & 1<<4 ) > 0) status_text=status_text+"PV2 Iso startup warning ";
+        if( (status_3 & 1<<5 ) > 0) status_text=status_text+"PV2 Iso running warning ";
+        if( (status_3 & 1<<6 ) > 0) status_text=status_text+"PV2+ grounding warning ";
+        if( (status_3 & 1<<7 ) > 0) status_text=status_text+"PV2- grounding warning ";
+        if( (status_3 & 1<<8 ) > 0) status_text=status_text+"PV3 Iso startup warning ";
+        if( (status_3 & 1<<9 ) > 0) status_text=status_text+"PV3 Iso running warning ";
+        if( (status_3 & 1<<10 ) > 0) status_text=status_text+"PV3 + grounding warning ";
+        if( (status_3 & 1<<11 ) > 0) status_text=status_text+"PV3- grounding warning ";
+        if( (status_3 & 1<<12 ) > 0) status_text=status_text+"PV1 voltage too low warning ";
+        if( (status_3 & 1<<13 ) > 0) status_text=status_text+"PV2 voltage too low warning ";
+        if( (status_3 & 1<<14 ) > 0) status_text=status_text+"PV3 voltage too low warning ";
+
+        if( (status_4 & 1<<0 ) > 0) status_text=status_text+"Internal fan warning ";
+        if( (status_4 & 1<<1 ) > 0) status_text=status_text+"External fan warning ";
+        if( (status_4 & 1<<2 ) > 0) status_text=status_text+"Synchronization ongoing ";
         publish_text_sensor_(CONF_INV_STATUS_TEXT,  status_text);
     }
 };
