@@ -8,6 +8,11 @@ namespace delta_solivia {
 
 class FrameParserVariant53 : public IFrameParser {
     void parse_frame_(const uint8_t* frame, std::size_t pos) override {
+
+        uint32_t status_1 =0;
+        uint32_t status_2 =0;
+        uint32_t status_3 =0;
+        uint32_t status_4 =0;
         // XXX: sensor names should match `CONF_INV_*` values in __init__.py
         publish_text_sensor_(CONF_INV_PART_NUMBER,
                              parse_string(frame, pos, 11));
@@ -106,18 +111,22 @@ class FrameParserVariant53 : public IFrameParser {
         // Inverter runtime total Minutes 4[UINT32] 1 = 1 minute
         publish_sensor_(CONF_INV_RUNTIME_TOTAL, extract_int32(&frame[pos]));
         pos += 4;
+
         // Status 1 4[UINT32] bit description
-        publish_sensor_("status_1", extract_int32(&frame[pos])); 
+        status_1=extract_int32(&frame[pos];
         pos += 4;
         // Status 2 4[UINT32] bit description
-        publish_sensor_("status_2", extract_int32(&frame[pos])); 
+        status_2=extract_int32(&frame[pos];
         pos += 4;
         // Status 3 4[UINT32] bit description
-        publish_sensor_("status_3", extract_int32(&frame[pos])); 
+        status_3=extract_int32(&frame[pos];
         pos += 4;
         // Status 4 4[UINT32] bit description
-        publish_sensor_("status_4", extract_int32(&frame[pos])); 
+        status_4=extract_int32(&frame[pos];
         pos += 4;
+
+        parseStatus(status_1, status_2, status_3, status_4);
+
         // Internal status 1 4[UIT32] reserved bit description
         publish_sensor_("internal_status_1", extract_int32(&frame[pos])); 
         pos += 4;
@@ -137,6 +146,35 @@ class FrameParserVariant53 : public IFrameParser {
         publish_sensor_(CONF_INV_RUNTIME_TODAY, extract_int32(&frame[pos])*60);
         pos += 4;
         // reserved 67
+    }
+
+    private void parseStatus(uint32_t status_1, uint32_t status_2, uint32_t status_3, uint32_t status_4){
+        status_text = "";
+        if( (status_1 & 1<<0) > 0) status_text=status_text+"Self test ongoing ";
+        if( (status_1 & 1<<1) > 0) status_text=status_text+"Firmware update ";
+        if( (status_1 & 1<<2) > 0) status_text=status_text+"Night mode ";
+        if( (status_1 & 1<<3) > 0) status_text=status_text+"L1 Voltage failure ";
+        if( (status_1 & 1<<4) > 0) status_text=status_text+"L2 Voltage failure ";
+        if( (status_1 & 1<<5) > 0) status_text=status_text+"L3 Voltage failure ";
+        if( (status_1 & 1<<6) > 0) status_text=status_text+"L1 Frequency failure ";
+        if( (status_1 & 1<<7) > 0) status_text=status_text+"L2 Frequency failure ";
+        if( (status_1 & 1<<8) > 0) status_text=status_text+"L3 Frequency failure ";
+        if( (status_1 & 1<<9) > 0) status_text=status_text+"L1 DC Inj. failure ";
+        if( (status_1 & 1<<10)> 0) status_text=status_text+"L2 DC Inj. Failure ";
+        if( (status_1 & 1<<11)> 0) status_text=status_text+"L3 DC Inj. failure ";
+        if( (status_1 & 1<<12)> 0) status_text=status_text+"L1 islanding ";
+        if( (status_1 & 1<<13)> 0) status_text=status_text+"L2 islanding ";
+        if( (status_1 & 1<<14)> 0) status_text=status_text+"L3 islanding ";
+        if( (status_1 & 1<<15)> 0) status_text=status_text+"L1 Grid error ";
+        if( (status_1 & 1<<16)> 0) status_text=status_text+"L2 Grid error ";
+        if( (status_1 & 1<<17)> 0) status_text=status_text+"L3 Grid error ";
+        if( (status_1 & 1<<18)> 0) status_text=status_text+"L1 Long grid out ";
+        if( (status_1 & 1<<19)> 0) status_text=status_text+"L2 Long grid out ";
+        if( (status_1 & 1<<20)> 0) status_text=status_text+"L3 Long grid out ";
+        if( (status_1 & 1<<21)> 0) status_text=status_text+"L1 Grid synchronization error ";
+        if( (status_1 & 1<<22)> 0) status_text=status_text+"L2 Grid synchronization error ";
+        if( (status_1 & 1<<23)> 0) status_text=status_text+"L3 Grid synchronization error ";
+        publish_text_sensor_(CONF_INV_STATUS_TEXT,  status_text);
     }
 };
 

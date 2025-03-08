@@ -155,6 +155,8 @@ INVERTER_SCHEMA = cv.Schema({
     cv.Optional(CONF_INV_THROTTLE, default = '10s'): cv.update_interval,
     cv.Optional(CONF_INV_PART_NUMBER): text_sensor.text_sensor_schema(),
     cv.Optional(CONF_INV_SERIAL_NUMBER): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_STATUS_TEXT): text_sensor.text_sensor_schema(),
+
     cv.Optional(CONF_INV_SOLAR_VOLTAGE_INPUT_1): sensor.sensor_schema(
         unit_of_measurement = UNIT_VOLT,
         icon = 'mdi:solar-power',
