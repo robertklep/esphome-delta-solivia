@@ -14,7 +14,6 @@ class FrameParserVariant53 : public IFrameParser {
         uint32_t status_2 =0;
         uint32_t status_3 =0;
         uint32_t status_4 =0;
-
         // XXX: sensor names should match `CONF_INV_*` values in __init__.py
         publish_text_sensor_(CONF_INV_PART_NUMBER,
                              parse_string(frame, pos, 11));
