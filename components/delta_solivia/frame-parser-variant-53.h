@@ -148,7 +148,7 @@ class FrameParserVariant53 : public IFrameParser {
         // reserved 67
     }
 
-    private void parseStatus(uint32_t status_1, uint32_t status_2, uint32_t status_3, uint32_t status_4){
+    void parseStatus(uint32_t status_1, uint32_t status_2, uint32_t status_3, uint32_t status_4){
         status_text = "";
         if( (status_1 & 1<<0) > 0) status_text=status_text+"Self test ongoing ";
         if( (status_1 & 1<<1) > 0) status_text=status_text+"Firmware update ";
