@@ -113,16 +113,16 @@ class FrameParserVariant53 : public IFrameParser {
         pos += 4;
 
         // Status 1 4[UINT32] bit description
-        status_1=extract_int32(&frame[pos];
+        status_1=extract_int32(&frame[pos]);
         pos += 4;
         // Status 2 4[UINT32] bit description
-        status_2=extract_int32(&frame[pos];
+        status_2=extract_int32(&frame[pos]);
         pos += 4;
         // Status 3 4[UINT32] bit description
-        status_3=extract_int32(&frame[pos];
+        status_3=extract_int32(&frame[pos]);
         pos += 4;
         // Status 4 4[UINT32] bit description
-        status_4=extract_int32(&frame[pos];
+        status_4=extract_int32(&frame[pos]);
         pos += 4;
 
         parseStatus(status_1, status_2, status_3, status_4);
