@@ -69,7 +69,7 @@ esphome:
 
 # Load as external component
 external_components:
-  - source: github://robertklep/esphome-delta-solivia@v2.0.1
+  - source: github://robertklep/esphome-delta-solivia@v3.0.0
     components: [ delta_solivia ]
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
@@ -228,26 +228,26 @@ The `throttle` option for each inverter will limit the amount of state updates s
 | 95     | SOLIVIA 30 EU T4 TL       | ❌        |        |
 | 99     | SOLIVIA CS                | ❌        |        |
 | 100    | SOLIVIA CM                | ❌        |        |
-| 102    | SOLIVIA 2.0 EU G4 TR      | ❌        |        |
-| 103    | SOLIVIA 2.5 EU G4 TR      | ❌        |        |
-| 105    | SOLIVIA 3.0 EU G4 TR      | ❌        |        |
-| 106    | SOLIVIA 3.3 EU G4 TR      | ❌        |        |
-| 107    | SOLIVIA 3.6 EU G4 TR      | ❌        |        |
-| 109    | SOLIVIA 4.4 EU G4 TR      | ❌        |        |
-| 110    | SOLIVIA 5.0 EU G4 TR      | ❌        |        |
-| 111    | SOLIVIA 10 EU G4 TR (EVR) | ❌        |        |
-| 113    | SOLIVIA 11 EU G4 TR       | ❌        |        |
-| 114    | SOLIVIA 11 EU G4 TR (EVR) | ❌        |        |
-| 120    | SOLIVIA 3.0 NA G4 TL      | ❌        |        |
-| 121    | SOLIVIA 3.8 NA G4 TL      | ❌        |        |
-| 122    | SOLIVIA 5.0 NA G4 TL      | ❌        |        |
-| 123    | SOLIVIA 7.6 NA G4 TL      | ❌        |        |
-| 124    | SOLIVIA 5.2 NA G4 TL      | ❌        |        |
-| 125    | SOLIVIA 6.6 NA G4 TL      | ❌        |        |
-| 158    | DELTA 20 TL               | ❌        |        |
-| 159    | DELTA 15 TL               | ❌        |        |
-| 160    | DELTA 28 TL               | ❌        |        |
-| 161    | DELTA 24 TL               | ❌        |        |
+| 102    | SOLIVIA 2.0 EU G4 TR      | ✅        | Variant53 |
+| 103    | SOLIVIA 2.5 EU G4 TR      | ✅        | "      |
+| 105    | SOLIVIA 3.0 EU G4 TR      | ✅        | "      |
+| 106    | SOLIVIA 3.3 EU G4 TR      | ✅        | "      |
+| 107    | SOLIVIA 3.6 EU G4 TR      | ✅        | "      |
+| 109    | SOLIVIA 4.4 EU G4 TR      | ✅        | "      |
+| 110    | SOLIVIA 5.0 EU G4 TR      | ✅        | "      |
+| 111    | SOLIVIA 10 EU G4 TR (EVR) | ✅        | "      |
+| 113    | SOLIVIA 11 EU G4 TR       | ✅        | "      |
+| 114    | SOLIVIA 11 EU G4 TR (EVR) | ✅        | "      |
+| 120    | SOLIVIA 3.0 NA G4 TL      | ✅        | "      |
+| 121    | SOLIVIA 3.8 NA G4 TL      | ✅        | "      |
+| 122    | SOLIVIA 5.0 NA G4 TL      | ✅        | "      |
+| 123    | SOLIVIA 7.6 NA G4 TL      | ✅        | "      |
+| 124    | SOLIVIA 5.2 NA G4 TL      | ✅        | "      |
+| 125    | SOLIVIA 6.6 NA G4 TL      | ✅        | "      |
+| 158    | DELTA 20 TL               | ✅        | "      |
+| 159    | DELTA 15 TL               | ✅        | "      |
+| 160    | DELTA 28 TL               | ✅        | "      |
+| 161    | DELTA 24 TL               | ✅        | "      |
 | 200    | RPI M6                    | ❌        |        |
 | 201    | RPI M8                    | ❌        |        |
 | 202    | RPI M10                   | ❌        |        |
