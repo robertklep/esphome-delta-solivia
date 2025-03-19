@@ -19,30 +19,31 @@ class DeltaSoliviaInverter;
 using InverterMap = std::map<uint8_t, DeltaSoliviaInverter*>;
 using Frame       = std::vector<uint8_t>;
 
-class DeltaSoliviaComponent: public PollingComponent, public UARTDevice {
-  unsigned int throttle;
-  InverterMap inverters;
-  GPIOPin *flow_control_pin{nullptr};
-  bool has_gateway;
+class DeltaSoliviaComponent : public PollingComponent, public UARTDevice {
+protected:
+  unsigned int throttle_;
+  InverterMap inverters_;
+  GPIOPin* flow_control_pin_{nullptr};
+  bool has_gateway_;
 
-  public:
-    DeltaSoliviaComponent() : has_gateway(false), throttle(10000) {}
+public:
+  DeltaSoliviaComponent() : has_gateway_(false), throttle_(10000) {}
 
-    void set_throttle(unsigned int throttle_) { throttle = throttle_; }
-    void set_flow_control_pin(GPIOPin *flow_control_pin_) { flow_control_pin = flow_control_pin_; }
-    void set_has_gateway(bool has_gateway_) { has_gateway = has_gateway_; }
+  void set_throttle(unsigned int throttle) { this->throttle_ = throttle; }
+  void set_flow_control_pin(GPIOPin* flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }
+  void set_has_gateway(bool has_gateway) { this->has_gateway_ = has_gateway; }
 
-    void setup() override;
-    void update() override;
-    void add_inverter(DeltaSoliviaInverter*);
-    DeltaSoliviaInverter* get_inverter(uint8_t);
-    bool process_frame(const Frame&);
-    bool validate_header(const Frame&);
-    bool validate_size(const Frame&);
-    bool validate_address(const Frame&);
-    bool validate_trailer(const Frame&);
-    void update_without_gateway();
-    void update_with_gateway();
+  void setup() override;
+  void update() override;
+  void add_inverter(DeltaSoliviaInverter* inverter);
+  DeltaSoliviaInverter* get_inverter(uint8_t address);
+  bool process_frame(const Frame& frame);
+  bool validate_header(const Frame& frame);
+  bool validate_size(const Frame& frame);
+  bool validate_address(const Frame& frame);
+  bool validate_trailer(const Frame& frame);
+  void update_without_gateway();
+  void update_with_gateway();
 };
 
 }

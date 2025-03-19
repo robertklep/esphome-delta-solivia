@@ -5,40 +5,40 @@ namespace esphome {
 namespace delta_solivia {
 
 void DeltaSoliviaComponent::setup() {
-  if (flow_control_pin != nullptr) {
-    flow_control_pin->setup();
-    flow_control_pin->digital_write(false);
+  if (this->flow_control_pin_ != nullptr) {
+    this->flow_control_pin_->setup();
+    this->flow_control_pin_->digital_write(false);
   }
 }
 
 // add an inverter
 void DeltaSoliviaComponent::add_inverter(DeltaSoliviaInverter* inverter) {
   ESP_LOGD(LOG_TAG, "CONFIG - added inverter with address %u", inverter->get_address());
-  inverters[inverter->get_address()] = inverter;
+  this->inverters_[inverter->get_address()] = inverter;
 }
 
 // get inverter
 DeltaSoliviaInverter* DeltaSoliviaComponent::get_inverter(uint8_t address) {
-  return inverters.count(address) == 1 ? inverters[address] : nullptr;
+  return this->inverters_.count(address) == 1 ? this->inverters_[address] : nullptr;
 }
 
 // process an incoming packet
 bool DeltaSoliviaComponent::process_frame(const Frame& frame) {
-  if (! validate_header(frame)) {
+  if (!this->validate_header(frame)) {
     ESP_LOGD(LOG_TAG, "FRAME - incorrect header");
     return false;
   }
 
-  if (! validate_size(frame)) {
+  if (!this->validate_size(frame)) {
     return false;
   }
 
-  if (! validate_trailer(frame)) {
+  if (!this->validate_trailer(frame)) {
     return false;
   }
 
   // update inverter
-  auto inverter = get_inverter(frame[2]);
+  auto inverter = this->get_inverter(frame[2]);
   uint8_t buffer[frame.size()];
   std::copy(frame.begin(), frame.end(), buffer); // copy vector to plain byte buffer
   inverter->update_sensors(buffer);
@@ -54,7 +54,7 @@ bool DeltaSoliviaComponent::validate_header(const Frame& frame) {
   }
 
   // validate address
-  if (! validate_address(frame)) {
+  if (!this->validate_address(frame)) {
     return false;
   }
 
@@ -84,7 +84,7 @@ bool DeltaSoliviaComponent::validate_size(const Frame& frame) {
 
 bool DeltaSoliviaComponent::validate_address(const Frame& frame) {
   unsigned int address = frame[2];
-  auto inverter        = get_inverter(address);
+  auto inverter = this->get_inverter(address);
 
   if (inverter == nullptr) {
     ESP_LOGD(LOG_TAG, "FRAME - unknown address %u", address);
@@ -113,43 +113,43 @@ bool DeltaSoliviaComponent::validate_trailer(const Frame& frame) {
 }
 
 void DeltaSoliviaComponent::update() {
-  if (has_gateway) {
-    update_with_gateway();
+  if (this->has_gateway_) {
+    this->update_with_gateway();
   } else {
-    update_without_gateway();
+    this->update_without_gateway();
   }
 }
 
 void DeltaSoliviaComponent::update_without_gateway() {
   // toggle between inverters to query
-  static InverterMap::const_iterator it = inverters.begin();
+  static InverterMap::const_iterator it = this->inverters_.begin();
   auto inverter = it->second;
 
   // request an update from the inverter
   inverter->request_update(
     [this](const uint8_t* bytes, unsigned len) -> void {
-      if (this->flow_control_pin != nullptr) {
-        this->flow_control_pin->digital_write(true);
+      if (this->flow_control_pin_ != nullptr) {
+        this->flow_control_pin_->digital_write(true);
       }
       this->write_array(bytes, len);
       this->flush();
-      if (this->flow_control_pin != nullptr) {
-        this->flow_control_pin->digital_write(false);
+      if (this->flow_control_pin_ != nullptr) {
+        this->flow_control_pin_->digital_write(false);
       }
     }
   );
 
   // pick inverter for the next update, with wrap around
-  if (++it == inverters.end()) {
-    it = inverters.begin();
+  if (++it == this->inverters_.end()) {
+    it = this->inverters_.begin();
   }
 
   // protocol timing chart (page 9) says response should arrive within 6ms.
   uint32_t start = millis();
-  while (millis() - start < 7 && ! available())
+  while (millis() - start < 7 && !this->available())
       ;
 
-  if (! available()) {
+  if (!this->available()) {
     ESP_LOGD(LOG_TAG, "RESPONSE - timeout");
     return;
   }
@@ -158,8 +158,8 @@ void DeltaSoliviaComponent::update_without_gateway() {
   uint8_t buffer[261];
 
   // read packet (XXX: this assumes that the full packet is available in the receive buffer)
-  unsigned int bytes_read = available();
-  bool read_success       = read_array(buffer, bytes_read);
+  unsigned int bytes_read = this->available();
+  bool read_success       = this->read_array(buffer, bytes_read);
 
   if (! read_success) {
     ESP_LOGD(LOG_TAG, "RESPONSE - unable to read packet");
@@ -168,7 +168,7 @@ void DeltaSoliviaComponent::update_without_gateway() {
 
   // process frame
   Frame frame(buffer, buffer + bytes_read);
-  process_frame(frame);
+  this->process_frame(frame);
 }
 
 void DeltaSoliviaComponent::update_with_gateway() {
@@ -176,9 +176,9 @@ void DeltaSoliviaComponent::update_with_gateway() {
   static Frame frame;
 
   // read data off UART
-  while (available() > 0) {
+  while (this->available() > 0) {
     // add new bytes to buffer
-    frame.push_back(read());
+    frame.push_back(this->read());
 
     // wait until we've read enough bytes for a header
     if (frame.size() < 6) {
@@ -186,7 +186,7 @@ void DeltaSoliviaComponent::update_with_gateway() {
     }
 
     // validate header
-    if (! validate_header(frame)) {
+    if (!this->validate_header(frame)) {
       frame.erase(frame.begin());
       continue;
     }
@@ -200,9 +200,9 @@ void DeltaSoliviaComponent::update_with_gateway() {
     // throttle?
     static unsigned int last_update = 0;
     unsigned int now                = millis();
-    if (now - last_update >= throttle) {
+    if (now - last_update >= this->throttle_) {
       // process frame
-      process_frame(frame);
+      this->process_frame(frame);
       last_update = millis();
     }
 

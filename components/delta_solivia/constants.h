@@ -4,8 +4,8 @@
 static const char *const LOG_TAG = "DeltaSolivia";
 
 // protocol characters (page 7)
-#define STX 0x02
-#define ETX 0x03
-#define ENQ 0x05
-#define ACK 0x06
-#define NAK 0x15
+static const uint8_t STX = 0x02;
+static const uint8_t ETX = 0x03;
+static const uint8_t ENQ = 0x05;
+static const uint8_t ACK = 0x06;
+static const uint8_t NAK = 0x15;
