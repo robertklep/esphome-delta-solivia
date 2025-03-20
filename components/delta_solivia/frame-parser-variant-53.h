@@ -170,15 +170,15 @@ protected:
 
     if( (status_2 & 1<<0 ) > 0) status_text = status_text + "PV1 Iso startup failure ";
     if( (status_2 & 1<<1 ) > 0) status_text = status_text + "PV1 Iso running failure ";
-    if( (status_2 & 1<<2 ) > 0) status_text = status_text + "PV1 +  grounding failure ";
+    if( (status_2 & 1<<2 ) > 0) status_text = status_text + "PV1+ grounding failure ";
     if( (status_2 & 1<<3 ) > 0) status_text = status_text + "PV1- grounding failure ";
     if( (status_2 & 1<<4 ) > 0) status_text = status_text + "PV2 Iso startup failure ";
     if( (status_2 & 1<<5 ) > 0) status_text = status_text + "PV2 Iso running failure ";
-    if( (status_2 & 1<<6 ) > 0) status_text = status_text + "PV2 +  grounding failure ";
+    if( (status_2 & 1<<6 ) > 0) status_text = status_text + "PV2+ grounding failure ";
     if( (status_2 & 1<<7 ) > 0) status_text = status_text + "PV2- grounding failure ";
     if( (status_2 & 1<<8 ) > 0) status_text = status_text + "PV3 Iso startup failure ";
     if( (status_2 & 1<<9 ) > 0) status_text = status_text + "PV3 Iso running failure ";
-    if( (status_2 & 1<<10 ) > 0) status_text = status_text + "PV3 +  grounding failure ";
+    if( (status_2 & 1<<10 ) > 0) status_text = status_text + "PV3+ grounding failure ";
     if( (status_2 & 1<<11 ) > 0) status_text = status_text + "PV3- grounding failure ";
     if( (status_2 & 1<<12 ) > 0) status_text = status_text + "PV1 voltage too low failure ";
     if( (status_2 & 1<<13 ) > 0) status_text = status_text + "PV2 voltage too low failure ";
@@ -189,15 +189,15 @@ protected:
 
     if( (status_3 & 1<<0 ) > 0) status_text = status_text + "PV1 Iso startup warning ";
     if( (status_3 & 1<<1 ) > 0) status_text = status_text + "PV1 Iso running warning ";
-    if( (status_3 & 1<<2 ) > 0) status_text = status_text + "PV1 +  grounding warning ";
+    if( (status_3 & 1<<2 ) > 0) status_text = status_text + "PV1+ grounding warning ";
     if( (status_3 & 1<<3 ) > 0) status_text = status_text + "PV1- grounding warning ";
     if( (status_3 & 1<<4 ) > 0) status_text = status_text + "PV2 Iso startup warning ";
     if( (status_3 & 1<<5 ) > 0) status_text = status_text + "PV2 Iso running warning ";
-    if( (status_3 & 1<<6 ) > 0) status_text = status_text + "PV2 +  grounding warning ";
+    if( (status_3 & 1<<6 ) > 0) status_text = status_text + "PV2+ grounding warning ";
     if( (status_3 & 1<<7 ) > 0) status_text = status_text + "PV2- grounding warning ";
     if( (status_3 & 1<<8 ) > 0) status_text = status_text + "PV3 Iso startup warning ";
     if( (status_3 & 1<<9 ) > 0) status_text = status_text + "PV3 Iso running warning ";
-    if( (status_3 & 1<<10 ) > 0) status_text = status_text + "PV3  +  grounding warning ";
+    if( (status_3 & 1<<10 ) > 0) status_text = status_text + "PV3+ grounding warning ";
     if( (status_3 & 1<<11 ) > 0) status_text = status_text + "PV3- grounding warning ";
     if( (status_3 & 1<<12 ) > 0) status_text = status_text + "PV1 voltage too low warning ";
     if( (status_3 & 1<<13 ) > 0) status_text = status_text + "PV2 voltage too low warning ";
