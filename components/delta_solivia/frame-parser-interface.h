@@ -18,17 +18,31 @@ protected:
   PublishTextSensorHandler publish_text_sensor_;
 
   int16_t extract_int16(const uint8_t* data) {
-    return (data[0] << 8) | data[1];
+    return (static_cast<int16_t>(data[0]) << 8) | 
+            static_cast<int16_t>(data[1]);
   }
 
-  uint32_t extract_int32(const uint8_t* data) {
-    return (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+  uint16_t extract_uint16(const uint8_t* data) {
+    return (static_cast<uint16_t>(data[0]) << 8) | 
+            static_cast<uint16_t>(data[1]);
   }
 
-  uint64_t extract_int64(const uint8_t *data) {
-    return ((uint64_t) data[0] << 56) | ((uint64_t) data[1] << 48) | ((uint64_t) data[2] << 40) |
-           ((uint64_t) data[3] << 32) | ((uint64_t) data[4] << 24) | ((uint64_t) data[5] << 16) |
-           ((uint64_t) data[6] << 8)  | (uint64_t)  data[7];
+  uint32_t extract_uint32(const uint8_t* data) {
+    return (static_cast<uint32_t>(data[0]) << 24) | 
+           (static_cast<uint32_t>(data[1]) << 16) | 
+           (static_cast<uint32_t>(data[2]) <<  8) | 
+            static_cast<uint32_t>(data[3]);
+  }
+
+  uint64_t extract_uint64(const uint8_t *data) {
+    return (static_cast<uint64_t>(data[0]) << 56) |
+           (static_cast<uint64_t>(data[1]) << 48) |
+           (static_cast<uint64_t>(data[2]) << 40) |
+           (static_cast<uint64_t>(data[3]) << 32) |
+           (static_cast<uint64_t>(data[4]) << 24) |
+           (static_cast<uint64_t>(data[5]) << 16) |
+           (static_cast<uint64_t>(data[6]) <<  8) |
+            static_cast<uint64_t>(data[7]);
   }
 
   std::string parse_string(const uint8_t* frame, std::size_t pos, int length) {
