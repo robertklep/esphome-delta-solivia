@@ -16,6 +16,7 @@ from esphome.const import (
     DEVICE_CLASS_FREQUENCY,
     DEVICE_CLASS_DURATION,
     DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_REACTIVE_POWER,
     STATE_CLASS_MEASUREMENT,
     STATE_CLASS_TOTAL_INCREASING,
     UNIT_WATT,
@@ -28,6 +29,7 @@ from esphome.const import (
     UNIT_CELSIUS,
     UNIT_HERTZ,
     UNIT_SECOND,
+    UNIT_VOLT_AMPS_REACTIVE,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -81,16 +83,19 @@ CONF_INV_AC_CURRENT_PHASE_1        = "ac_current_phase_1"
 CONF_INV_AC_VOLTAGE_PHASE_1        = "ac_voltage_phase_1"
 CONF_INV_AC_POWER_PHASE_1          = "ac_power_phase_1"
 CONF_INV_AC_FREQ_PHASE_1           = "ac_frequency_phase_1"
+CONF_INV_AC_REACTIVE_POWER_PHASE_1 = "ac_reactive_power_phase_1"
 
 CONF_INV_AC_CURRENT_PHASE_2        = "ac_current_phase_2"
 CONF_INV_AC_VOLTAGE_PHASE_2        = "ac_voltage_phase_2"
 CONF_INV_AC_POWER_PHASE_2          = "ac_power_phase_2"
 CONF_INV_AC_FREQ_PHASE_2           = "ac_frequency_phase_2"
+CONF_INV_AC_REACTIVE_POWER_PHASE_2 = "ac_reactive_power_phase_2"
 
 CONF_INV_AC_CURRENT_PHASE_3        = "ac_current_phase_3"
 CONF_INV_AC_VOLTAGE_PHASE_3        = "ac_voltage_phase_3"
 CONF_INV_AC_POWER_PHASE_3          = "ac_power_phase_3"
 CONF_INV_AC_FREQ_PHASE_3           = "ac_frequency_phase_3"
+CONF_INV_AC_REACTIVE_POWER_PHASE_3 = "ac_reactive_power_phase_3"
 
 CONF_INV_SC_GRID_VOLTAGE           = "sc_grid_voltage"
 CONF_INV_SC_GRID_FREQUENCY         = "sc_grid_frequency"
@@ -120,7 +125,26 @@ CONF_INV_MAX_SOLAR_POWER_INPUT_1   = "max_solar_power_input_1"
 CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1 = "min_solar_isolation_resistance_input_1"
 CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1 = "max_solar_isolation_resistance_input_1"
 
-CONF_INV_STATUS_TEXT = "inverter_status"
+# statuses/limits/errors/etc
+CONF_INV_STATUS                    = "inverter_status"
+CONF_INV_ALARMS_STATUS             = "inverter_alarms_status"
+CONF_INV_DC_INPUT_STATUS           = "inverter_dc_input_status"
+CONF_INV_DC_INPUT_LIMITS           = "inverter_dc_input_limits"
+CONF_INV_AC_OUTPUT_STATUS          = "inverter_ac_output_status"
+CONF_INV_AC_OUTPUT_LIMITS          = "inverter_ac_output_limits"
+CONF_INV_WARNINGS                  = "inverter_warnings"
+CONF_INV_DC_HARDWARE_FAILURES      = "inverter_dc_hardware_failures"
+CONF_INV_AC_HARDWARE_FAILURES      = "inverter_ac_hardware_failures"
+CONF_INV_SC_HARDWARE_FAILURES      = "inverter_sc_hardware_failures"
+CONF_INV_BULK_FAILURES             = "inverter_bulk_failures"
+CONF_INV_COMMS_FAILURES            = "inverter_comms_failures"
+CONF_INV_AC_HARDWARE_DISTURBANCE   = "inverter_ac_hardware_disturbance"
+CONF_INV_DC_HARDWARE_STAGE_ERRORS  = "inverter_dc_hardware_stage_errors"
+CONF_INV_CALIBRATION_STATUS        = "inverter_calibration_status"
+CONF_INV_NEUTRAL_ERRORS            = "inverter_neutral_errors"
+
+# TODO:
+# CONF_INV_HISTORY_STATUS_MESSAGES   = "inverter_history_status_messages"
 
 # supported variants and their parser
 SUPPORTED_VARIANTS = {
@@ -304,6 +328,13 @@ INVERTER_SCHEMA = cv.Schema({
         device_class = DEVICE_CLASS_FREQUENCY,
         state_class = STATE_CLASS_MEASUREMENT
     ),
+    cv.Optional(CONF_INV_AC_REACTIVE_POWER_PHASE_1): sensor.sensor_schema(
+        unit_of_measurement = UNIT_VOLT_AMPS_REACTIVE,
+        icon = 'mdi:solar-power',
+        accuracy_decimals = 2,
+        device_class = DEVICE_CLASS_REACTIVE_POWER,
+        state_class = STATE_CLASS_MEASUREMENT
+    ),
     cv.Optional(CONF_INV_AC_CURRENT_PHASE_2): sensor.sensor_schema(
         unit_of_measurement = UNIT_AMPERE,
         icon = 'mdi:current-ac',
@@ -332,6 +363,13 @@ INVERTER_SCHEMA = cv.Schema({
         device_class = DEVICE_CLASS_FREQUENCY,
         state_class = STATE_CLASS_MEASUREMENT
     ),
+    cv.Optional(CONF_INV_AC_REACTIVE_POWER_PHASE_2): sensor.sensor_schema(
+        unit_of_measurement = UNIT_VOLT_AMPS_REACTIVE,
+        icon = 'mdi:solar-power',
+        accuracy_decimals = 2,
+        device_class = DEVICE_CLASS_REACTIVE_POWER,
+        state_class = STATE_CLASS_MEASUREMENT
+    ),
     cv.Optional(CONF_INV_AC_CURRENT_PHASE_3): sensor.sensor_schema(
         unit_of_measurement = UNIT_AMPERE,
         icon = 'mdi:current-ac',
@@ -358,6 +396,13 @@ INVERTER_SCHEMA = cv.Schema({
         icon = 'mdi:sine-wave',
         accuracy_decimals = 2,
         device_class = DEVICE_CLASS_FREQUENCY,
+        state_class = STATE_CLASS_MEASUREMENT
+    ),
+    cv.Optional(CONF_INV_AC_REACTIVE_POWER_PHASE_3): sensor.sensor_schema(
+        unit_of_measurement = UNIT_VOLT_AMPS_REACTIVE,
+        icon = 'mdi:solar-power',
+        accuracy_decimals = 2,
+        device_class = DEVICE_CLASS_REACTIVE_POWER,
         state_class = STATE_CLASS_MEASUREMENT
     ),
     cv.Optional(CONF_INV_SC_GRID_VOLTAGE): sensor.sensor_schema(
@@ -507,7 +552,24 @@ INVERTER_SCHEMA = cv.Schema({
         #device_class = DEVICE_CLASS_,
         state_class = STATE_CLASS_TOTAL_INCREASING
     ),
-    cv.Optional(CONF_INV_STATUS_TEXT): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_STATUS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_ALARMS_STATUS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_DC_INPUT_STATUS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_DC_INPUT_LIMITS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_AC_OUTPUT_STATUS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_AC_OUTPUT_LIMITS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_WARNINGS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_DC_HARDWARE_FAILURES): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_AC_HARDWARE_FAILURES): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_SC_HARDWARE_FAILURES): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_BULK_FAILURES): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_COMMS_FAILURES): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_AC_HARDWARE_DISTURBANCE): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_DC_HARDWARE_STAGE_ERRORS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_CALIBRATION_STATUS): text_sensor.text_sensor_schema(),
+    cv.Optional(CONF_INV_NEUTRAL_ERRORS): text_sensor.text_sensor_schema(),
+# TODO:
+#    cv.Optional(CONF_INV_HISTORY_STATUS_MESSAGES): text_sensor.text_sensor_schema(),
 })
 
 CONFIG_SCHEMA = cv.All(
