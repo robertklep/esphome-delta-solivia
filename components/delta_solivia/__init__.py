@@ -120,9 +120,12 @@ CONF_INV_MAX_SOLAR_POWER_INPUT_1   = "max_solar_power_input_1"
 CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1 = "min_solar_isolation_resistance_input_1"
 CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1 = "max_solar_isolation_resistance_input_1"
 
+CONF_INV_STATUS_TEXT = "inverter_status"
+
 # supported variants and their parser
 SUPPORTED_VARIANTS = {
     ( 15, 18, 19, 20, 31, 34, 35, 36, 38, 39, 55, 58, 59, 60 ): 'Variant15Parser',
+    ( 53, 73, 102, 103, 105, 106, 107, 109, 110, 111, 113, 114, 120, 121, 122, 123, 124, 125, 158, 159, 160, 161) : 'Variant53Parser',
     ( 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222 ):  'Variant212Parser'
 }
 
@@ -504,6 +507,7 @@ INVERTER_SCHEMA = cv.Schema({
         #device_class = DEVICE_CLASS_,
         state_class = STATE_CLASS_TOTAL_INCREASING
     ),
+    cv.Optional(CONF_INV_STATUS_TEXT): text_sensor.text_sensor_schema(),
 })
 
 CONFIG_SCHEMA = cv.All(
