@@ -1,9 +1,12 @@
 esphome:
   name: 'delta-solivia-reader'
   friendly_name: 'Delta Solivia Reader'
+  platformio_options:
+    build_unflags: '-std=c++11 -std=gnu++11'
+    build_flags: '-std=c++17 -std=gnu++17'
 
 external_components:
-  - source: github://robertklep/my-esphome-components
+  - source: github://robertklep/my-esphome-components@v2.0.1
     components: [ delta_solivia ]
 
 esp32:
@@ -46,6 +49,7 @@ delta_solivia:
   update_interval: 10s        # see README.md
   inverters:
     - address: 1
+      variant: 15
       throttle: 30s           # see README.md
       part_number:
         name: 'Inverter#1 Part Number'
@@ -53,9 +57,9 @@ delta_solivia:
         name: 'Inverter#1 Serial Number'
       ac_power:
         name: 'Inverter#1 Current Power'
-      total_energy:
+      supplied_ac_energy_total:
         name: 'Inverter#1 Total Energy'
-      today_energy:
+      supplied_ac_energy_today:
         name: 'Inverter#1 Today Energy'
         filters:
           - timeout: 2h
@@ -78,10 +82,11 @@ delta_solivia:
       runtime_today:
         name: 'Inverter#1 Runtime Today'
       max_ac_power_today:
-        name: 'Inverter#1 AC Power Today'
+        name: 'Inverter#1 Max AC Power Today'
       max_solar_input_power:
-        name: 'Inverter#1 Solar Input Power'
+        name: 'Inverter#1 Max Solar Input Power'
     - address: 2
+      variant: 15
       throttle: 30s
       part_number:
         name: 'Inverter#2 Part Number'
@@ -89,9 +94,9 @@ delta_solivia:
         name: 'Inverter#2 Serial Number'
       ac_power:
         name: 'Inverter#2 Current Power'
-      total_energy:
+      supplied_ac_energy_total:
         name: 'Inverter#2 Total Energy'
-      today_energy:
+      supplied_ac_energy_today:
         name: 'Inverter#2 Today Energy'
         filters:
           - timeout: 2h
@@ -114,6 +119,6 @@ delta_solivia:
       runtime_today:
         name: 'Inverter#2 Runtime Today'
       max_ac_power_today:
-        name: 'Inverter#2 AC Power Today'
+        name: 'Inverter#2 Max AC Power Today'
       max_solar_input_power:
-        name: 'Inverter#2 Solar Input Power'
+        name: 'Inverter#2 Max Solar Input Power'

@@ -5,6 +5,7 @@
 #include "esphome.h"
 #include "esphome/components/uart/uart.h"
 #include "delta-solivia-crc.h"
+//#include "delta-solivia-inverter.h"
 
 namespace esphome {
 namespace delta_solivia {

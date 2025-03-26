@@ -1,11 +1,15 @@
-#pragma once
+#ifndef DELTA_SOLIVIA_INVERTER_H
+#define DELTA_SOLIVIA_INVERTER_H
 
+#include <map>
+#include <string>
+#include <cstdint>
 #include "esphome.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
 #include "constants.h"
 #include "delta-solivia-crc.h"
-#include "variant-15-parser.h"
+#include "frame-parser.h"
 
 namespace esphome {
 namespace delta_solivia {
@@ -13,49 +17,34 @@ namespace delta_solivia {
 using sensor::Sensor;
 using text_sensor::TextSensor;
 
+using SensorMap     = std::map<std::string, Sensor*>;
+using TextSensorMap = std::map<std::string, TextSensor*>;
+
 class DeltaSoliviaInverter {
   protected:
     uint8_t address_;
+    uint8_t variant_;
+    SensorMap sensors_;
+    TextSensorMap text_sensors_;
+    FrameParser parser_;
 
   public:
-    TextSensor* part_number_ { nullptr };
-    TextSensor* serial_number_ { nullptr };
-    Sensor* solar_voltage_ { nullptr };
-    Sensor* solar_current_ { nullptr };
-    Sensor* ac_current_ { nullptr };
-    Sensor* ac_voltage_ { nullptr };
-    Sensor* ac_power_ { nullptr };
-    Sensor* ac_frequency_ { nullptr };
-    Sensor* grid_ac_voltage_ { nullptr };
-    Sensor* grid_ac_frequency_ { nullptr };
-    Sensor* inverter_runtime_minutes_ { nullptr };
-    Sensor* inverter_runtime_hours_ { nullptr };
-    Sensor* day_supplied_ac_energy_ { nullptr };
-    Sensor* supplied_ac_energy_ { nullptr };
-    Sensor* max_ac_power_today_ { nullptr };
-    Sensor* max_solar_input_power_ { nullptr };
+    DeltaSoliviaInverter(uint8_t address, uint8_t variant);
 
-    explicit DeltaSoliviaInverter(uint8_t address) : address_(address) {}
+    uint8_t get_address() {
+      return address_;
+    }
 
-    uint8_t get_address() { return address_; }
+    void add_sensor(const std::string& name, Sensor* sensor) {
+      sensors_[name] = sensor;
+    }
 
-    void set_part_number(TextSensor* part_number) { part_number_ = part_number; }
-    void set_serial_number(TextSensor* serial_number) { serial_number_ = serial_number; }
-    void set_solar_voltage(Sensor* solar_voltage) { solar_voltage_ = solar_voltage; }
-    void set_solar_current(Sensor* solar_current) { solar_current_ = solar_current; }
-    void set_ac_current(Sensor* ac_current) { ac_current_ = ac_current; }
-    void set_ac_voltage(Sensor* ac_voltage) { ac_voltage_ = ac_voltage; }
-    void set_ac_power(Sensor* ac_power) { ac_power_ = ac_power; }
-    void set_ac_frequency(Sensor* ac_frequency) { ac_frequency_ = ac_frequency; }
-    void set_grid_ac_voltage(Sensor* grid_ac_voltage) { grid_ac_voltage_ = grid_ac_voltage; }
-    void set_grid_ac_frequency(Sensor* grid_ac_frequency) { grid_ac_frequency_ = grid_ac_frequency; }
-    void set_inverter_runtime_minutes(Sensor* inverter_runtime_minutes) { inverter_runtime_minutes_ = inverter_runtime_minutes; }
-    void set_inverter_runtime_hours(Sensor* inverter_runtime_hours) { inverter_runtime_hours_ = inverter_runtime_hours; }
-    void set_day_supplied_ac_energy(Sensor* day_supplied_ac_energy) { day_supplied_ac_energy_ = day_supplied_ac_energy; }
-    void set_supplied_ac_energy(Sensor* supplied_ac_energy) { supplied_ac_energy_ = supplied_ac_energy; }
-    void set_max_ac_power_today(Sensor* max_ac_power_today) { max_ac_power_today_ = max_ac_power_today; }
-    void set_max_solar_input_power(Sensor* max_solar_input_power) { max_solar_input_power_ = max_solar_input_power; }
+    void add_text_sensor(const std::string& name, TextSensor* sensor) {
+      text_sensors_[name] = sensor;
+    }
 
+    void publish_sensor(const std::string& name, float value, bool once = false);
+    void publish_text_sensor(const std::string& name, const std::string& value, bool once = false);
     void update_sensors(const uint8_t*);
 
     template <typename F>
@@ -85,3 +74,5 @@ class DeltaSoliviaInverter {
 
 }
 }
+
+#endif // DELTA_SOLIVIA_INVERTER_H

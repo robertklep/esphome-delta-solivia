@@ -1,77 +1,49 @@
 #include "delta-solivia-inverter.h"
+#include "frame-parser.h"
 
 namespace esphome {
 namespace delta_solivia {
 
+DeltaSoliviaInverter::DeltaSoliviaInverter(uint8_t address, uint8_t variant) : address_(address), variant_(variant), parser_(FrameParserFactory::createParser(variant)) {
+  // validate parser
+  if (parser_ == nullptr) {
+    ESP_LOGE(LOG_TAG, "INVERTER%u - unsupported variant %u", address_, variant_);
+    return;
+  }
+
+  // set handlers
+  parser_->set_publish_sensor([this](const std::string& name, float value) {
+    this->publish_sensor(name, value, false);
+  });
+  parser_->set_publish_text_sensor([this](const std::string& name, const std::string& value)  {
+    this->publish_text_sensor(name, value, false);
+  });
+}
+
 void DeltaSoliviaInverter::update_sensors(const uint8_t* buffer) {
   ESP_LOGD(LOG_TAG, "INVERTER#%u - updating sensors", address_);
+  parser_->parse_frame(buffer, true);
+}
 
-  // parse buffer and update sensors
-  Variant15Parser parser(buffer, true);
-  parser.parse();
+void DeltaSoliviaInverter::publish_sensor(const std::string& name, float value, bool once) {
+  ESP_LOGD(LOG_TAG, "INVERTER#%u - sensor '%s', value = %f", address_, name.c_str(), value);
+  auto entry = sensors_.find(name);
 
-  if (part_number_ != nullptr && ! part_number_->has_state()) {
-    part_number_->publish_state(parser.SAP_part_number);
+  if (entry != sensors_.end()) {
+    if (! once || ! entry->second->has_state()) {
+      entry->second->publish_state(value);
+    }
   }
+}
 
-  if (serial_number_ != nullptr && ! serial_number_->has_state()) {
-    serial_number_->publish_state(parser.SAP_serial_number);
-  }
+void DeltaSoliviaInverter::publish_text_sensor(const std::string& name, const std::string& value, bool once) {
+  ESP_LOGD(LOG_TAG, "INVERTER#%u - sensor '%s', value = %s", address_, name.c_str(), value.c_str());
+  auto entry = text_sensors_.find(name);
 
-  if (solar_voltage_ != nullptr) {
-    solar_voltage_->publish_state(parser.Solar_voltage_input_1);
-  }
-
-  if (solar_current_ != nullptr) {
-    solar_current_->publish_state(parser.Solar_current_input_1);
-  }
-
-  if (ac_current_ != nullptr) {
-    ac_current_->publish_state(parser.AC_current);
-  }
-
-  if (ac_voltage_ != nullptr) {
-    ac_voltage_->publish_state(parser.AC_voltage);
-  }
-
-  if (ac_power_ != nullptr) {
-    ac_power_->publish_state(parser.AC_power);
-  }
-
-  if (ac_frequency_ != nullptr) {
-    ac_frequency_->publish_state(parser.AC_frequency);
-  }
-
-  if (grid_ac_voltage_ != nullptr) {
-    grid_ac_voltage_->publish_state(parser.AC_Grid_voltage);
-  }
-
-  if (grid_ac_frequency_ != nullptr) {
-    grid_ac_frequency_->publish_state(parser.AC_Grid_frequency);
-  }
-
-  if (inverter_runtime_minutes_ != nullptr) {
-    inverter_runtime_minutes_->publish_state(parser.Inverter_runtime_minutes);
-  }
-
-  if (day_supplied_ac_energy_ != nullptr) {
-    day_supplied_ac_energy_->publish_state(parser.Day_supplied_ac_energy);
-  }
-
-  if (max_ac_power_today_ != nullptr) {
-    max_ac_power_today_->publish_state(parser.Max_ac_power_today);
-  }
-
-  if (max_solar_input_power_ != nullptr) {
-    max_solar_input_power_->publish_state(parser.Max_solar_1_input_power);
-  }
-
-  if (inverter_runtime_hours_ != nullptr) {
-    inverter_runtime_hours_->publish_state(parser.Inverter_runtime_hours);
-  }
-
-  if (supplied_ac_energy_ != nullptr) {
-    supplied_ac_energy_->publish_state(parser.Supplied_ac_energy);
+  if (entry != text_sensors_.end()) {
+    if (! once || ! entry->second->has_state()) {
+      entry->second->publish_state(value);
+    }
   }
 }
 
