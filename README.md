@@ -69,7 +69,7 @@ esphome:
 
 # Load as external component
 external_components:
-  - source: github://robertklep/esphome-delta-solivia@v3.0.0
+  - source: github://robertklep/esphome-delta-solivia@v3.1.0
     components: [ delta_solivia ]
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
@@ -312,6 +312,64 @@ max_solar_voltage_input_1
 max_solar_power_input_1
 min_solar_isolation_resistance_input_1
 max_solar_isolation_resistance_input_1
+inverter_alarms_status
+inverter_dc_input_status
+inverter_dc_input_limits
+inverter_ac_output_status
+inverter_ac_output_limits
+inverter_warnings
+inverter_dc_hardware_failures
+inverter_ac_hardware_failures
+inverter_sc_hardware_failures
+inverter_bulk_failures
+inverter_comms_failures
+inverter_ac_hardware_disturbance
+inverter_dc_hardware_stage_errors
+inverter_calibration_status
+inverter_neutral_errors
+```
+
+### Variant 53
+
+```
+part_number
+serial_number
+SAP_date_code
+SAP_revision
+Software_rev_sc_major
+Software_rev_sc_minor
+Software_rev_sc_bugfix
+solar_power_input_1
+solar_power_input_2
+solar_power_input_3
+solar_voltage_input_1
+solar_voltage_input_2
+solar_voltage_input_3
+solar_current_input_1
+solar_current_input_2
+solar_current_input_3
+ac_current_phase_1
+ac_current_phase_2
+ac_current_phase_3
+ac_voltage_phase_1
+ac_voltage_phase_2
+ac_voltage_phase_3
+ac_frequency_phase_1
+ac_frequency_phase_2
+ac_frequency_phase_3
+ac_power_phase_1
+ac_power_phase_2
+ac_power_phase_3
+ac_reactive_power_phase_1
+ac_reactive_power_phase_2
+ac_reactive_power_phase_3
+min_solar_isolation_resistance_input_1
+max_solar_isolation_resistance_input_1
+supplied_ac_energy_total
+supplied_ac_energy_today
+runtime_total
+runtime_today
+inverter_status
 ```
 
 ### Variant 212
@@ -343,3 +401,4 @@ runtime_total
 supplied_ac_energy_today
 supplied_ac_energy_total
 ```
+

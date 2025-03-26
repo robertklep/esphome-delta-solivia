@@ -107,15 +107,253 @@ protected:
     this->publish_sensor_(CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1, this->extract_uint16(&frame[pos]) * 1000); // kOhms
     pos += 2;
 
-    // limits and status
-    this->publish_sensor_("Alarms_status", frame[pos++]); // Alarms status
-    this->publish_sensor_("Status_dc_input", frame[pos++]); // Status DC input
-    this->publish_sensor_("Limits_dc_input", frame[pos++]); // Limits DC input
-    this->publish_sensor_("Status_ac_output", frame[pos++]); // Status AC output
-    this->publish_sensor_("Limits_ac_output", frame[pos++]); // Limits AC output
-    this->publish_sensor_("Warnings_status", frame[pos++]); // Warnings status
-    this->publish_sensor_("DC_hardware_failure", frame[pos++]); // DC hardware failure
-    this->publish_sensor_("AC_hardware_failure", frame[pos++]); // AC hardware failure
+    // statuses, limits, failures, errors, etc
+    this->parse_alarms_status(frame[pos++]);
+    this->parse_status_dc_input(frame[pos++]);
+    this->parse_limits_dc_input(frame[pos++]);
+    this->parse_status_ac_output(frame[pos++]);
+    this->parse_limits_ac_output(frame[pos++]);
+    this->parse_warnings_status(frame[pos++]);
+    this->parse_dc_hardware_failure(frame[pos++]);
+    this->parse_ac_hardware_failure(frame[pos++]);
+    this->parse_sc_hardware_failure(frame[pos++]);
+    this->parse_internal_bulk_failure(frame[pos++]);
+    this->parse_internal_communications_failure(frame[pos++]);
+    this->parse_ac_hardware_disturbance(frame[pos++]);
+    this->parse_dc_hw_stage_error(frame[pos++]);
+    this->parse_calibration_status(frame[pos++]);
+    this->parse_neutral_error(frame[pos++]);
+    this->parse_neutral_error(frame[pos++]);
+
+    // TODO: history status messages
+  }
+
+  void parse_alarms_status(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "GFDI test failure\n";
+    if (status & 1<<1) status_text += "Fuse- fault\n";
+    if (status & 1<<2) status_text += "Fuse+ fault\n";
+    if (status & 1<<3) status_text += "GFDI hardware error\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "Running isolation failure\n";
+    if (status & 1<<6) status_text += "#6\n";
+    if (status & 1<<7) status_text += "Startup isolation failure\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_ALARMS_STATUS, status_text);
+    }
+  }
+
+  void parse_status_dc_input(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Limits DC\n";
+    if (status & 1<<1) status_text += "MPP limited operation\n";
+    if (status & 1<<2) status_text += "Power limited operation\n";
+    if (status & 1<<3) status_text += "Temperature limited operation\n";
+    if (status & 1<<4) status_text += "Input power low\n";
+    if (status & 1<<5) status_text += "Internal bulk failure\n";
+    if (status & 1<<6) status_text += "Internal communication failure\n";
+    if (status & 1<<7) status_text += "Internal DC hardware failure\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_DC_INPUT_STATUS, status_text);
+    }
+  }
+
+  void parse_limits_dc_input(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "#1\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "Input critical undervoltage\n";
+    if (status & 1<<7) status_text += "Input voltage too low\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_DC_INPUT_LIMITS, status_text);
+    }
+  }
+
+  // XXX: documentation isn't clear about AC output status;
+  //      we'll assume it's the "grid errors" table
+  void parse_status_ac_output(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "DC injection current failure\n";
+    if (status & 1<<1) status_text += "Islanding detected\n";
+    if (status & 1<<2) status_text += "Frequency error (high)\n";
+    if (status & 1<<3) status_text += "Frequency error (low)\n";
+    if (status & 1<<4) status_text += "Critical overvoltage error\n";
+    if (status & 1<<5) status_text += "Overvoltage error\n";
+    if (status & 1<<6) status_text += "Undervoltage error\n";
+    if (status & 1<<7) status_text += "Critical undervoltage error\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_AC_OUTPUT_STATUS, status_text);
+    }
+  }
+
+  void parse_limits_ac_output(uint8_t status) {
+    std::string status_text = "";
+    // AC limits are undocumented
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "#1\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "#6\n";
+    if (status & 1<<7) status_text += "#7\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_AC_OUTPUT_LIMITS, status_text);
+    }
+  }
+
+  void parse_warnings_status(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "Varistor warning\n";
+    if (status & 1<<2) status_text += "Warnings Status #2\n";
+    if (status & 1<<3) status_text += "PV- grounding fault\n";
+    if (status & 1<<4) status_text += "Running isolation status\n";
+    if (status & 1<<5) status_text += "PV+ grounding fault\n";
+    if (status & 1<<6) status_text += "Startup isolation\n";
+    if (status & 1<<7) status_text += "#7\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_WARNINGS, status_text);
+    }
+  }
+
+  void parse_dc_hardware_failure(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Bridge error\n";
+    if (status & 1<<1) status_text += "Boost error\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "SC OK error\n";
+    if (status & 1<<6) status_text += "NTC overtemperature\n";
+    if (status & 1<<7) status_text += "NTC defect\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_DC_HARDWARE_FAILURES, status_text);
+    }
+  }
+
+  void parse_ac_hardware_failure(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Bulk undervoltage\n";
+    if (status & 1<<1) status_text += "Bulk overvoltage\n";
+    if (status & 1<<2) status_text += "EEPROM corrupt\n";
+    if (status & 1<<3) status_text += "Overcurrent shutdown\n";
+    if (status & 1<<4) status_text += "AUX voltage error\n";
+    if (status & 1<<5) status_text += "HW bulk undervoltage\n";
+    if (status & 1<<6) status_text += "NTC overtemperature\n";
+    if (status & 1<<7) status_text += "NTC defect\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_AC_HARDWARE_FAILURES, status_text);
+    }
+  }
+
+  void parse_sc_hardware_failure(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "#1\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "#6\n";
+    if (status & 1<<7) status_text += "AC_OK_ERROR\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_SC_HARDWARE_FAILURES, status_text);
+    }
+  }
+
+  void parse_internal_bulk_failure(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "#1\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "Overvoltage\n";
+    if (status & 1<<7) status_text += "Undervoltage\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_BULK_FAILURES, status_text);
+    }
+  }
+
+  void parse_internal_communications_failure(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "#0\n";
+    if (status & 1<<1) status_text += "LCD error\n";
+    if (status & 1<<2) status_text += "AC error\n";
+    if (status & 1<<3) status_text += "DC error\n";
+    if (status & 1<<4) status_text += "LCD failure\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "AC failure\n";
+    if (status & 1<<7) status_text += "DC failure\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_COMMS_FAILURES, status_text);
+    }
+  }
+
+  void parse_ac_hardware_disturbance(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Ext power control active\n";
+    if (status & 1<<1) status_text += "IT autotest fail\n";
+    if (status & 1<<2) status_text += "#2\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "AC relay error\n";
+    if (status & 1<<7) status_text += "RTC error\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_AC_HARDWARE_DISTURBANCE, status_text);
+    }
+  }
+
+  void parse_dc_hw_stage_error(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Overvoltage\n";
+    if (status & 1<<1) status_text += "AUX voltage error\n";
+    if (status & 1<<2) status_text += "Current protection\n";
+    if (status & 1<<3) status_text += "Overvoltage 2\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "#6\n";
+    if (status & 1<<7) status_text += "#7\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_DC_HARDWARE_STAGE_ERRORS, status_text);
+    }
+  }
+
+  void parse_calibration_status(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "LEM calibration error\n";
+    if (status & 1<<1) status_text += "AC calibration error\n";
+    if (status & 1<<2) status_text += "SC calibration error\n";
+    if (status & 1<<3) status_text += "#3\n";
+    if (status & 1<<4) status_text += "#4\n";
+    if (status & 1<<5) status_text += "#5\n";
+    if (status & 1<<6) status_text += "#6\n";
+    if (status & 1<<7) status_text += "#7\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_CALIBRATION_STATUS, status_text);
+    }
+  }
+
+  void parse_neutral_error(uint8_t status) {
+    std::string status_text = "";
+    if (status & 1<<0) status_text += "Critical overvoltage N2\n";
+    if (status & 1<<1) status_text += "Overvoltage N2\n";
+    if (status & 1<<2) status_text += "Undervoltage N2\n";
+    if (status & 1<<3) status_text += "Critical undervoltage N2\n";
+    if (status & 1<<4) status_text += "Critical overvoltage N1\n";
+    if (status & 1<<5) status_text += "Overvoltage N1\n";
+    if (status & 1<<6) status_text += "Undervoltage N1\n";
+    if (status & 1<<7) status_text += "Critical undervoltage N1\n";
+    if (status_text.size()) {
+      this->publish_text_sensor_(CONF_INV_NEUTRAL_ERRORS, status_text);
+    }
   }
 public:
   FrameParserVariant15() {}

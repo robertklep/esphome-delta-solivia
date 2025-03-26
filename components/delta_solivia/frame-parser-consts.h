@@ -26,6 +26,7 @@ static const char* CONF_INV_AC_CURRENT_PHASE_PREFIX = "ac_current_phase_";
 static const char* CONF_INV_AC_VOLTAGE_PHASE_PREFIX = "ac_voltage_phase_";
 static const char* CONF_INV_AC_POWER_PHASE_PREFIX = "ac_power_phase_";
 static const char* CONF_INV_AC_FREQ_PHASE_PREFIX = "ac_frequency_phase_";
+static const char* CONF_INV_AC_REACTIVE_POWER_PHASE_PREFIX = "ac_reactive_power_phase_";
 
 static const char* CONF_INV_SC_GRID_VOLTAGE = "sc_grid_voltage";
 static const char* CONF_INV_SC_GRID_FREQUENCY = "sc_grid_frequency";
@@ -55,7 +56,25 @@ static const char* CONF_INV_MAX_SOLAR_POWER_INPUT_1 = "max_solar_power_input_1";
 static const char* CONF_INV_MIN_SOLAR_ISO_RES_INPUT_1 = "min_solar_isolation_resistance_input_1";
 static const char* CONF_INV_MAX_SOLAR_ISO_RES_INPUT_1 = "max_solar_isolation_resistance_input_1";
 
-static const char* CONF_INV_STATUS_TEXT = "inverter_status";
+static const char* CONF_INV_STATUS = "inverter_status";
+
+static const char* CONF_INV_ALARMS_STATUS = "inverter_alarms_status";
+static const char* CONF_INV_DC_INPUT_STATUS = "inverter_dc_input_status";
+static const char* CONF_INV_DC_INPUT_LIMITS = "inverter_dc_input_limits";
+static const char* CONF_INV_AC_OUTPUT_STATUS = "inverter_ac_output_status";
+static const char* CONF_INV_AC_OUTPUT_LIMITS = "inverter_ac_output_limits";
+static const char* CONF_INV_WARNINGS = "inverter_warnings";
+static const char* CONF_INV_DC_HARDWARE_FAILURES = "inverter_dc_hardware_failures";
+static const char* CONF_INV_AC_HARDWARE_FAILURES = "inverter_ac_hardware_failures";
+static const char* CONF_INV_SC_HARDWARE_FAILURES = "inverter_sc_hardware_failures";
+static const char* CONF_INV_BULK_FAILURES = "inverter_bulk_failures";
+static const char* CONF_INV_COMMS_FAILURES = "inverter_comms_failures";
+static const char* CONF_INV_AC_HARDWARE_DISTURBANCE = "inverter_ac_hardware_disturbance";
+static const char* CONF_INV_DC_HARDWARE_STAGE_ERRORS = "inverter_dc_hardware_stage_errors";
+static const char* CONF_INV_CALIBRATION_STATUS = "inverter_calibration_status";
+static const char* CONF_INV_NEUTRAL_ERRORS = "inverter_neutral_errors";
+
+static const char* CONF_INV_HISTORY_STATUS_MESSAGES= "inverter_history_status_messages";
 
 }
 }

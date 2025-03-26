@@ -82,7 +82,7 @@ protected:
       this->publish_sensor_(CONF_INV_AC_POWER_PHASE_PREFIX + std::to_string(phase), this->extract_uint16(&frame[pos])); // W
       pos += 2;
       // AC reactive power - L1 VAR 2[INT16] 1 = 1VAR
-      this->publish_sensor_("ac_reactive_power_phase_" + std::to_string(phase), this->extract_uint16(&frame[pos])); // W
+      this->publish_sensor_(CONF_INV_AC_REACTIVE_POWER_PHASE_PREFIX + std::to_string(phase), this->extract_uint16(&frame[pos])); // W
       pos += 2;
     }
   
@@ -143,71 +143,72 @@ protected:
 
   void parse_status(uint32_t status_1, uint32_t status_2, uint32_t status_3, uint32_t status_4){
     std::string status_text = "";
-    if( (status_1 & 1<<0) > 0) status_text = status_text + "Self test ongoing ";
-    if( (status_1 & 1<<1) > 0) status_text = status_text + "Firmware update ";
-    if( (status_1 & 1<<2) > 0) status_text = status_text + "Night mode ";
-    if( (status_1 & 1<<3) > 0) status_text = status_text + "L1 Voltage failure ";
-    if( (status_1 & 1<<4) > 0) status_text = status_text + "L2 Voltage failure ";
-    if( (status_1 & 1<<5) > 0) status_text = status_text + "L3 Voltage failure ";
-    if( (status_1 & 1<<6) > 0) status_text = status_text + "L1 Frequency failure ";
-    if( (status_1 & 1<<7) > 0) status_text = status_text + "L2 Frequency failure ";
-    if( (status_1 & 1<<8) > 0) status_text = status_text + "L3 Frequency failure ";
-    if( (status_1 & 1<<9) > 0) status_text = status_text + "L1 DC Inj. failure ";
-    if( (status_1 & 1<<10)> 0) status_text = status_text + "L2 DC Inj. Failure ";
-    if( (status_1 & 1<<11)> 0) status_text = status_text + "L3 DC Inj. failure ";
-    if( (status_1 & 1<<12)> 0) status_text = status_text + "L1 islanding ";
-    if( (status_1 & 1<<13)> 0) status_text = status_text + "L2 islanding ";
-    if( (status_1 & 1<<14)> 0) status_text = status_text + "L3 islanding ";
-    if( (status_1 & 1<<15)> 0) status_text = status_text + "L1 Grid error ";
-    if( (status_1 & 1<<16)> 0) status_text = status_text + "L2 Grid error ";
-    if( (status_1 & 1<<17)> 0) status_text = status_text + "L3 Grid error ";
-    if( (status_1 & 1<<18)> 0) status_text = status_text + "L1 Long grid out ";
-    if( (status_1 & 1<<19)> 0) status_text = status_text + "L2 Long grid out ";
-    if( (status_1 & 1<<20)> 0) status_text = status_text + "L3 Long grid out ";
-    if( (status_1 & 1<<21)> 0) status_text = status_text + "L1 Grid synchronization error ";
-    if( (status_1 & 1<<22)> 0) status_text = status_text + "L2 Grid synchronization error ";
-    if( (status_1 & 1<<23)> 0) status_text = status_text + "L3 Grid synchronization error ";
 
-    if( (status_2 & 1<<0 ) > 0) status_text = status_text + "PV1 Iso startup failure ";
-    if( (status_2 & 1<<1 ) > 0) status_text = status_text + "PV1 Iso running failure ";
-    if( (status_2 & 1<<2 ) > 0) status_text = status_text + "PV1+ grounding failure ";
-    if( (status_2 & 1<<3 ) > 0) status_text = status_text + "PV1- grounding failure ";
-    if( (status_2 & 1<<4 ) > 0) status_text = status_text + "PV2 Iso startup failure ";
-    if( (status_2 & 1<<5 ) > 0) status_text = status_text + "PV2 Iso running failure ";
-    if( (status_2 & 1<<6 ) > 0) status_text = status_text + "PV2+ grounding failure ";
-    if( (status_2 & 1<<7 ) > 0) status_text = status_text + "PV2- grounding failure ";
-    if( (status_2 & 1<<8 ) > 0) status_text = status_text + "PV3 Iso startup failure ";
-    if( (status_2 & 1<<9 ) > 0) status_text = status_text + "PV3 Iso running failure ";
-    if( (status_2 & 1<<10 ) > 0) status_text = status_text + "PV3+ grounding failure ";
-    if( (status_2 & 1<<11 ) > 0) status_text = status_text + "PV3- grounding failure ";
-    if( (status_2 & 1<<12 ) > 0) status_text = status_text + "PV1 voltage too low failure ";
-    if( (status_2 & 1<<13 ) > 0) status_text = status_text + "PV2 voltage too low failure ";
-    if( (status_2 & 1<<14 ) > 0) status_text = status_text + "PV3 voltage too low failure ";
-    if( (status_2 & 1<<15 ) > 0) status_text = status_text + "Internal failure ";
-    if( (status_2 & 1<<16 ) > 0) status_text = status_text + "Auto test failure ";
-    if( (status_2 & 1<<17 ) > 0) status_text = status_text + "PV power too low failure ";
+    if (status_1 & 1<<0) status_text += "Self test ongoing\n";
+    if (status_1 & 1<<1) status_text += "Firmware update\n";
+    if (status_1 & 1<<2) status_text += "Night mode\n";
+    if (status_1 & 1<<3) status_text += "L1 Voltage failure\n";
+    if (status_1 & 1<<4) status_text += "L2 Voltage failure\n";
+    if (status_1 & 1<<5) status_text += "L3 Voltage failure\n";
+    if (status_1 & 1<<6) status_text += "L1 Frequency failure\n";
+    if (status_1 & 1<<7) status_text += "L2 Frequency failure\n";
+    if (status_1 & 1<<8) status_text += "L3 Frequency failure\n";
+    if (status_1 & 1<<9) status_text += "L1 DC Inj. failure\n";
+    if (status_1 & 1<<10) status_text += "L2 DC Inj. Failure\n";
+    if (status_1 & 1<<11) status_text += "L3 DC Inj. failure\n";
+    if (status_1 & 1<<12) status_text += "L1 islanding\n";
+    if (status_1 & 1<<13) status_text += "L2 islanding\n";
+    if (status_1 & 1<<14) status_text += "L3 islanding\n";
+    if (status_1 & 1<<15) status_text += "L1 Grid error\n";
+    if (status_1 & 1<<16) status_text += "L2 Grid error\n";
+    if (status_1 & 1<<17) status_text += "L3 Grid error\n";
+    if (status_1 & 1<<18) status_text += "L1 Long grid out\n";
+    if (status_1 & 1<<19) status_text += "L2 Long grid out\n";
+    if (status_1 & 1<<20) status_text += "L3 Long grid out\n";
+    if (status_1 & 1<<21) status_text += "L1 Grid synchronization error\n";
+    if (status_1 & 1<<22) status_text += "L2 Grid synchronization error\n";
+    if (status_1 & 1<<23) status_text += "L3 Grid synchronization error\n";
 
-    if( (status_3 & 1<<0 ) > 0) status_text = status_text + "PV1 Iso startup warning ";
-    if( (status_3 & 1<<1 ) > 0) status_text = status_text + "PV1 Iso running warning ";
-    if( (status_3 & 1<<2 ) > 0) status_text = status_text + "PV1+ grounding warning ";
-    if( (status_3 & 1<<3 ) > 0) status_text = status_text + "PV1- grounding warning ";
-    if( (status_3 & 1<<4 ) > 0) status_text = status_text + "PV2 Iso startup warning ";
-    if( (status_3 & 1<<5 ) > 0) status_text = status_text + "PV2 Iso running warning ";
-    if( (status_3 & 1<<6 ) > 0) status_text = status_text + "PV2+ grounding warning ";
-    if( (status_3 & 1<<7 ) > 0) status_text = status_text + "PV2- grounding warning ";
-    if( (status_3 & 1<<8 ) > 0) status_text = status_text + "PV3 Iso startup warning ";
-    if( (status_3 & 1<<9 ) > 0) status_text = status_text + "PV3 Iso running warning ";
-    if( (status_3 & 1<<10 ) > 0) status_text = status_text + "PV3+ grounding warning ";
-    if( (status_3 & 1<<11 ) > 0) status_text = status_text + "PV3- grounding warning ";
-    if( (status_3 & 1<<12 ) > 0) status_text = status_text + "PV1 voltage too low warning ";
-    if( (status_3 & 1<<13 ) > 0) status_text = status_text + "PV2 voltage too low warning ";
-    if( (status_3 & 1<<14 ) > 0) status_text = status_text + "PV3 voltage too low warning ";
+    if (status_2 & 1<<0) status_text += "PV1 Iso startup failure\n";
+    if (status_2 & 1<<1) status_text += "PV1 Iso running failure\n";
+    if (status_2 & 1<<2) status_text += "PV1+ grounding failure\n";
+    if (status_2 & 1<<3) status_text += "PV1- grounding failure\n";
+    if (status_2 & 1<<4) status_text += "PV2 Iso startup failure\n";
+    if (status_2 & 1<<5) status_text += "PV2 Iso running failure\n";
+    if (status_2 & 1<<6) status_text += "PV2+ grounding failure\n";
+    if (status_2 & 1<<7) status_text += "PV2- grounding failure\n";
+    if (status_2 & 1<<8) status_text += "PV3 Iso startup failure\n";
+    if (status_2 & 1<<9) status_text += "PV3 Iso running failure\n";
+    if (status_2 & 1<<10) status_text += "PV3+ grounding failure\n";
+    if (status_2 & 1<<11) status_text += "PV3- grounding failure\n";
+    if (status_2 & 1<<12) status_text += "PV1 voltage too low failure\n";
+    if (status_2 & 1<<13) status_text += "PV2 voltage too low failure\n";
+    if (status_2 & 1<<14) status_text += "PV3 voltage too low failure\n";
+    if (status_2 & 1<<15) status_text += "Internal failure\n";
+    if (status_2 & 1<<16) status_text += "Auto test failure\n";
+    if (status_2 & 1<<17) status_text += "PV power too low failure\n";
 
-    if( (status_4 & 1<<0 ) > 0) status_text = status_text + "Internal fan warning ";
-    if( (status_4 & 1<<1 ) > 0) status_text = status_text + "External fan warning ";
-    if( (status_4 & 1<<2 ) > 0) status_text = status_text + "Synchronization ongoing ";
+    if (status_3 & 1<<0) status_text += "PV1 Iso startup warning\n";
+    if (status_3 & 1<<1) status_text += "PV1 Iso running warning\n";
+    if (status_3 & 1<<2) status_text += "PV1+ grounding warning\n";
+    if (status_3 & 1<<3) status_text += "PV1- grounding warning\n";
+    if (status_3 & 1<<4) status_text += "PV2 Iso startup warning\n";
+    if (status_3 & 1<<5) status_text += "PV2 Iso running warning\n";
+    if (status_3 & 1<<6) status_text += "PV2+ grounding warning\n";
+    if (status_3 & 1<<7) status_text += "PV2- grounding warning\n";
+    if (status_3 & 1<<8) status_text += "PV3 Iso startup warning\n";
+    if (status_3 & 1<<9) status_text += "PV3 Iso running warning\n";
+    if (status_3 & 1<<10) status_text += "PV3+ grounding warning\n";
+    if (status_3 & 1<<11) status_text += "PV3- grounding warning\n";
+    if (status_3 & 1<<12) status_text += "PV1 voltage too low warning\n";
+    if (status_3 & 1<<13) status_text += "PV2 voltage too low warning\n";
+    if (status_3 & 1<<14) status_text += "PV3 voltage too low warning\n";
 
-    this->publish_text_sensor_(CONF_INV_STATUS_TEXT, status_text);
+    if (status_4 & 1<<0) status_text += "Internal fan warning\n";
+    if (status_4 & 1<<1) status_text += "External fan warning\n";
+    if (status_4 & 1<<2) status_text += "Synchronization ongoing\n";
+
+    this->publish_text_sensor_(CONF_INV_STATUS, status_text);
   }
 public:
   FrameParserVariant53() {}
