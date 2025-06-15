@@ -12,7 +12,7 @@ For more information on the hardware requirements, see ["Hardware"](#hardware) b
 
 ## Supported models
 
-There are dozens of Solivia models, and about 10 different protocol variants. The document "Public Solar Inverter Communication Protocol (Version 1.2)", from Delta Energy Systems (Germany) GmbH, documents the protocol that the inverters use over their RS485 port. The document can be found by DuckDuckGo'ing for its title.
+There are dozens of Solivia models, and about 10 different protocol variants. The document ["Public Solar Inverter Communication Protocol (Version 1.2)"](assets/Public%20RS485%20Protocol%201V2.pdf), from Delta Energy Systems (Germany) GmbH, documents the protocol that the inverters use over their RS485 port. The document can be found by DuckDuckGo'ing for its title.
 
 Only a limited number of models is supported by this component at the moment ([see below](#compatibility-table)).
 
