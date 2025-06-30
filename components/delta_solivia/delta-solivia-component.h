@@ -42,8 +42,10 @@ public:
   bool validate_size(const Frame& frame);
   bool validate_address(const Frame& frame);
   bool validate_trailer(const Frame& frame);
+  void write_frame(const uint8_t*, unsigned);
   void update_without_gateway();
   void update_with_gateway();
+  void set_power_limit(uint8_t, uint8_t = 0xff);
 };
 
 }

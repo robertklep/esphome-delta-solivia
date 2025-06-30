@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // logging tag
 static const char *const LOG_TAG = "DeltaSolivia";
 

@@ -120,6 +120,17 @@ void DeltaSoliviaComponent::update() {
   }
 }
 
+void DeltaSoliviaComponent::write_frame(const uint8_t* bytes, unsigned len) {
+  if (this->flow_control_pin_ != nullptr) {
+    this->flow_control_pin_->digital_write(true);
+  }
+  this->write_array(bytes, len);
+  this->flush();
+  if (this->flow_control_pin_ != nullptr) {
+    this->flow_control_pin_->digital_write(false);
+  }
+}
+
 void DeltaSoliviaComponent::update_without_gateway() {
   // toggle between inverters to query
   static InverterMap::const_iterator it = this->inverters_.begin();
@@ -128,14 +139,7 @@ void DeltaSoliviaComponent::update_without_gateway() {
   // request an update from the inverter
   inverter->request_update(
     [this](const uint8_t* bytes, unsigned len) -> void {
-      if (this->flow_control_pin_ != nullptr) {
-        this->flow_control_pin_->digital_write(true);
-      }
-      this->write_array(bytes, len);
-      this->flush();
-      if (this->flow_control_pin_ != nullptr) {
-        this->flow_control_pin_->digital_write(false);
-      }
+      this->write_frame(bytes, len);
     }
   );
 
@@ -209,6 +213,34 @@ void DeltaSoliviaComponent::update_with_gateway() {
     // clear vector for next round
     frame.clear();
   }
+}
+
+void DeltaSoliviaComponent::set_power_limit(uint8_t pct, uint8_t address) {
+  if (pct > 100) {
+    ESP_LOGE(LOG_TAG, "POWER LIMIT - percentage should be <= 100% (value: %u%%)", pct);
+    return;
+  }
+  ESP_LOGD(LOG_TAG, "POWER LIMIT - setting limit to %u%% for address %02X (0xFF = all inverters)", pct, address);
+
+  // page 14
+  const uint8_t bytes[] = {
+    STX,     // start of protocol
+    ENQ,     // enquire
+    address, // for inverter with address
+    0x03,    // number of data bytes, including commands
+    0x0D,    // command
+    0x88,    // subcommand
+    pct,     // percentage
+    0x00,    // CRC low
+    0x00,    // CRC high
+    ETX      // end of protocol
+  };
+
+  // calculate CRC
+  *((uint16_t*) &bytes[7]) = delta_solivia_crc((uint8_t *) bytes + 1, (uint8_t *) bytes + 6);
+
+  // write command to bus
+  this->write_frame(bytes, sizeof(bytes));
 }
 
 }
