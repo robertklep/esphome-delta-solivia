@@ -19,23 +19,23 @@ protected:
     pos += 11;
     this->publish_text_sensor_(CONF_INV_SERIAL_NUMBER, this->parse_string(frame, pos, 18));
     pos += 18;
-    this->publish_sensor_("SAP_date_code", this->extract_uint32(&frame[pos]));  // Date Code);
+    this->publish_sensor_("SAP_date_code", this->extract_uint32(&frame[pos]));
     pos += 4;
-    this->publish_sensor_("SAP_revision", this->extract_uint16(&frame[pos]));  // Date Code);
+    this->publish_sensor_("SAP_revision", this->extract_uint16(&frame[pos]));
     pos += 2;
 
-    // Correct till here
-
-    this->publish_sensor_("Software_rev_sc_major", frame[pos++]);  // Major SC revision
-    this->publish_sensor_("Software_rev_sc_minor", frame[pos++]);  // Minor SC revision
-    this->publish_sensor_("Software_rev_sc_bugfix", frame[pos++]);  // SC bugfix
+    // Major SC revision
+    this->publish_sensor_("Software_rev_sc_major", frame[pos++]);
+    // Minor SC revision
+    this->publish_sensor_("Software_rev_sc_minor", frame[pos++]);
+    // SC bugfix
+    this->publish_sensor_("Software_rev_sc_bugfix", frame[pos++]);
 
     // Software Revision Power Controller Major , Minor, Bug fixing 3 Byte
     pos += 3;
     // Software Revision ENS controller Major, Minor, Bug fixing 3 Byte
     pos += 3;
-    // Software Revision Watch dog controller Major, Minor, Bug fixing 3
-    // Byte
+    // Software Revision Watch dog controller Major, Minor, Bug fixing 3 Byte
     pos += 3;
     // Software Revision DC controller Major, Minor, Bug fixing 3 Byte
     pos += 3;
