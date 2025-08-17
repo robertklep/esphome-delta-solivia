@@ -153,13 +153,18 @@ void DeltaSoliviaComponent::update_without_gateway() {
   while (millis() - start < 7 && !this->available())
       ;
 
-  if (!this->available()) {
+  if (! this->available()) {
     ESP_LOGD(LOG_TAG, "RESPONSE - timeout");
     return;
   }
 
+  ESP_LOGD(LOG_TAG, "GOING TO READ");
+  this->set_throttle(0);
+  this->update_with_gateway();
+
+#if 0
   // absolute maximum packet size
-  uint8_t buffer[261];
+  uint8_t buffer[262];
 
   // read packet (XXX: this assumes that the full packet is available in the receive buffer)
   unsigned int bytes_read = this->available();
@@ -172,7 +177,9 @@ void DeltaSoliviaComponent::update_without_gateway() {
 
   // process frame
   Frame frame(buffer, buffer + bytes_read);
+
   this->process_frame(frame);
+#endif
 }
 
 void DeltaSoliviaComponent::update_with_gateway() {
@@ -190,7 +197,7 @@ void DeltaSoliviaComponent::update_with_gateway() {
     }
 
     // validate header
-    if (!this->validate_header(frame)) {
+    if (! this->validate_header(frame)) {
       frame.erase(frame.begin());
       continue;
     }
