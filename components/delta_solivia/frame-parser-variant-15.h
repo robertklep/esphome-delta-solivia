@@ -11,7 +11,7 @@ protected:
   void parse_frame_(const uint8_t* frame, std::size_t pos) override {
     unsigned start = millis();
 
-    ESP_LOGD("TEST", "parser start");
+    ESP_LOGI("TEST", "parser start");
 
     // XXX: sensor names should match `CONF_INV_*` values in __init__.py
     this->publish_text_sensor_(CONF_INV_PART_NUMBER, this->parse_string(frame, pos, 11));
@@ -130,7 +130,7 @@ protected:
     this->parse_neutral_error(frame[pos++]);
 
     // TODO: history status messages
-    ESP_LOGD("TEST", "parser end: %u", millis() - start);
+    ESP_LOGI("TEST", "parser end: %u", millis() - start);
   }
 
   void parse_alarms_status(uint8_t status) {

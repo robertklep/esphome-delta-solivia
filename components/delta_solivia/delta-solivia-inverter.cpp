@@ -21,7 +21,7 @@ DeltaSoliviaInverter::DeltaSoliviaInverter(uint8_t address, uint8_t variant) : a
 }
 
 void DeltaSoliviaInverter::update_sensors(const uint8_t* buffer) {
-  ESP_LOGD(LOG_TAG, "INVERTER#%u - updating sensors", this->address_);
+  ESP_LOGI(LOG_TAG, "INVERTER#%u - updating sensors", this->address_);
   this->parser_->parse_frame(buffer, true);
 }
 
@@ -29,12 +29,9 @@ void DeltaSoliviaInverter::publish_sensor(const std::string& name, float value, 
   ESP_LOGD(LOG_TAG, "INVERTER#%u - sensor '%s', value = %f", this->address_, name.c_str(), value);
   auto entry = this->sensors_.find(name);
 
-  ESP_LOGE("TEST", "name=%s value=%f", name.c_str(), value);
   if (entry != this->sensors_.end()) {
-    ESP_LOGE("TEST", "name=%s value=%f MARK 1", name.c_str(), value);
     if (! once || ! entry->second->has_state()) {
-      ESP_LOGE("TEST", "name=%s value=%f MARK 2", name.c_str(), value);
-      //entry->second->publish_state(value);
+      entry->second->publish_state(value);
     }
   }
 }
@@ -45,7 +42,7 @@ void DeltaSoliviaInverter::publish_text_sensor(const std::string& name, const st
 
   if (entry != this->text_sensors_.end()) {
     if (! once || ! entry->second->has_state()) {
-      //entry->second->publish_state(value);
+      entry->second->publish_state(value);
     }
   }
 }
