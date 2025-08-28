@@ -18,19 +18,19 @@ protected:
   PublishTextSensorHandler publish_text_sensor_;
 
   int16_t extract_int16(const uint8_t* data) {
-    return (static_cast<int16_t>(data[0]) << 8) | 
+    return (static_cast<int16_t>(data[0]) << 8) |
             static_cast<int16_t>(data[1]);
   }
 
   uint16_t extract_uint16(const uint8_t* data) {
-    return (static_cast<uint16_t>(data[0]) << 8) | 
+    return (static_cast<uint16_t>(data[0]) << 8) |
             static_cast<uint16_t>(data[1]);
   }
 
   uint32_t extract_uint32(const uint8_t* data) {
-    return (static_cast<uint32_t>(data[0]) << 24) | 
-           (static_cast<uint32_t>(data[1]) << 16) | 
-           (static_cast<uint32_t>(data[2]) <<  8) | 
+    return (static_cast<uint32_t>(data[0]) << 24) |
+           (static_cast<uint32_t>(data[1]) << 16) |
+           (static_cast<uint32_t>(data[2]) <<  8) |
             static_cast<uint32_t>(data[3]);
   }
 

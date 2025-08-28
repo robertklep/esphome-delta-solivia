@@ -45,7 +45,7 @@ void DeltaSoliviaInverter::publish_text_sensor(const std::string& name, const st
 
   if (entry != this->text_sensors_.end()) {
     if (! once || ! entry->second->has_state()) {
-      entry->second->publish_state(value);
+      //entry->second->publish_state(value);
     }
   }
 }

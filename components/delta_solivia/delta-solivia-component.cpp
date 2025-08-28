@@ -24,16 +24,16 @@ DeltaSoliviaInverter* DeltaSoliviaComponent::get_inverter(uint8_t address) {
 
 // process an incoming packet
 bool DeltaSoliviaComponent::process_frame(const Frame& frame) {
-  if (!this->validate_header(frame)) {
+  if (! this->validate_header(frame)) {
     ESP_LOGD(LOG_TAG, "FRAME - incorrect header");
     return false;
   }
 
-  if (!this->validate_size(frame)) {
+  if (! this->validate_size(frame)) {
     return false;
   }
 
-  if (!this->validate_trailer(frame)) {
+  if (! this->validate_trailer(frame)) {
     return false;
   }
 
@@ -183,16 +183,10 @@ void DeltaSoliviaComponent::update_without_gateway() {
 
 void DeltaSoliviaComponent::update_with_gateway() {
   // buffer to store serial data
-  Frame frame;
+  static Frame frame;
 
   // read data off UART
-  while (true) {
-    delay(1);
-
-    if (! this->available()) {
-      continue;
-    }
-
+  while (this->available() > 0) {
     // add new bytes to buffer
     int byte = this->read();
     if (byte == -1) {
@@ -218,6 +212,7 @@ void DeltaSoliviaComponent::update_with_gateway() {
     }
 
     // throttle?
+#if 0
     static unsigned int last_update = 0;
     unsigned int now                = millis();
     if (now - last_update >= this->throttle_) {
@@ -225,6 +220,8 @@ void DeltaSoliviaComponent::update_with_gateway() {
       this->process_frame(frame);
       last_update = millis();
     }
+#endif
+    this->process_frame(frame);
 
     // clear vector for next round
     frame.clear();
