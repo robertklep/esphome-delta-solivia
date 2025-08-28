@@ -618,13 +618,13 @@ async def to_code(config):
         # to prevent overloading HA
         async def make_sensor(field):
             # create the throttle filter
-            filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
-            filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
-            cg.add(cg.App.register_component(filter))
-            cg.add(filter.set_component_source('sensor'))
+#            filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
+#            filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
+#            cg.add(cg.App.register_component(filter))
+#            cg.add(filter.set_component_source('sensor'))
 
             sens = await sensor.new_sensor(inverter_config[field])
-            cg.add(sens.add_filters([ filter ]))
+#            cg.add(sens.add_filters([ filter ]))
 
             cg.add(inverter.add_sensor(field, sens))
 

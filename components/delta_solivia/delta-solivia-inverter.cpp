@@ -29,9 +29,12 @@ void DeltaSoliviaInverter::publish_sensor(const std::string& name, float value, 
   ESP_LOGD(LOG_TAG, "INVERTER#%u - sensor '%s', value = %f", this->address_, name.c_str(), value);
   auto entry = this->sensors_.find(name);
 
+  ESP_LOGE("TEST", "name=%s value=%f", name.c_str(), value);
   if (entry != this->sensors_.end()) {
+    ESP_LOGE("TEST", "name=%s value=%f MARK 1", name.c_str(), value);
     if (! once || ! entry->second->has_state()) {
-      entry->second->publish_state(value);
+      ESP_LOGE("TEST", "name=%s value=%f MARK 2", name.c_str(), value);
+      //entry->second->publish_state(value);
     }
   }
 }

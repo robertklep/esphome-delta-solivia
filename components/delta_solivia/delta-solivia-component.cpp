@@ -158,7 +158,6 @@ void DeltaSoliviaComponent::update_without_gateway() {
     return;
   }
 
-  ESP_LOGD(LOG_TAG, "GOING TO READ");
   this->set_throttle(0);
   this->update_with_gateway();
 
@@ -184,12 +183,22 @@ void DeltaSoliviaComponent::update_without_gateway() {
 
 void DeltaSoliviaComponent::update_with_gateway() {
   // buffer to store serial data
-  static Frame frame;
+  Frame frame;
 
   // read data off UART
-  while (this->available() > 0) {
+  while (true) {
+    delay(1);
+
+    if (! this->available()) {
+      continue;
+    }
+
     // add new bytes to buffer
-    frame.push_back(this->read());
+    int byte = this->read();
+    if (byte == -1) {
+      continue;
+    }
+    frame.push_back(byte);
 
     // wait until we've read enough bytes for a header
     if (frame.size() < 6) {
@@ -219,6 +228,7 @@ void DeltaSoliviaComponent::update_with_gateway() {
 
     // clear vector for next round
     frame.clear();
+    break;
   }
 }
 
