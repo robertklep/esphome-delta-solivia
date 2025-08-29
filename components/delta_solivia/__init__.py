@@ -159,26 +159,40 @@ def _parser_for_variant(variant):
             return SUPPORTED_VARIANTS[variants]
     return None
 
-def _validate_inverters(config):
-    if len(config) < 1:
+def _validate(config):
+    has_gateway = config[CONF_HAS_GATEWAY]
+    inverters   = config[CONF_INVERTERS]
+
+    if len(inverters) < 1:
         raise cv.Invalid("Need at least one inverter to be configured")
+
     # ensure all configured inverters have a unique address
-    addresses = { inverter.get(CONF_INV_ADDRESS) for inverter in config }
-    if len(addresses) != len(config):
+    addresses = { inverter.get(CONF_INV_ADDRESS) for inverter in inverters }
+    if len(addresses) != len(inverters):
         raise cv.Invalid("Inverter addresses should be unique")
-    # check if variants are supported
-    variants = { inverter.get(CONF_INV_VARIANT) for inverter in config }
-    for variant in variants:
+
+    # validate inverter configuration
+    for inverter in inverters:
+        address = inverter[CONF_INV_ADDRESS]
+
+        # check if variant is supported
+        variant = inverter.get(CONF_INV_VARIANT)
         parser = _parser_for_variant(variant)
         if parser is None:
-            raise cv.Invalid(f"Variant {variant} not supported")
+            raise cv.Invalid(f"Variant {variant} not supported (for inverter with address {address})")
+
+        # throttle should only be used in gateway mode
+        throttle = inverter.get(CONF_INV_THROTTLE)
+        if not has_gateway and throttle:
+            raise cv.Invalid(f"Throttle should only be used in gateway mode (for inverter with address {address})")
+
     return config
 
 INVERTER_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DeltaSoliviaInverter),
     cv.Required(CONF_INV_ADDRESS): cv.int_range(min = 1),
     cv.Required(CONF_INV_VARIANT): cv.int_range(min = 1, max = 222),
-    cv.Optional(CONF_INV_THROTTLE, default = '10s'): cv.update_interval,
+    cv.Optional(CONF_INV_THROTTLE): cv.update_interval,
     cv.Optional(CONF_INV_PART_NUMBER): text_sensor.text_sensor_schema(),
     cv.Optional(CONF_INV_SERIAL_NUMBER): text_sensor.text_sensor_schema(),
     cv.Optional(CONF_INV_SOLAR_VOLTAGE_INPUT_1): sensor.sensor_schema(
@@ -577,10 +591,11 @@ CONFIG_SCHEMA = cv.All(
         cv.GenerateID(): cv.declare_id(DeltaSoliviaComponent),
         cv.Optional(CONF_FLOW_CONTROL_PIN): pins.gpio_output_pin_schema,
         cv.Optional(CONF_HAS_GATEWAY, default = False): cv.boolean,
-        cv.Required(CONF_INVERTERS): cv.All(cv.ensure_list(INVERTER_SCHEMA), _validate_inverters),
+        cv.Required(CONF_INVERTERS): cv.ensure_list(INVERTER_SCHEMA),
     })
     .extend(cv.polling_component_schema("5s"))
-    .extend(uart.UART_DEVICE_SCHEMA)
+    .extend(uart.UART_DEVICE_SCHEMA),
+    _validate
 )
 
 async def to_code(config):
@@ -607,25 +622,33 @@ async def to_code(config):
     for inverter_config in config[CONF_INVERTERS]:
         address  = inverter_config[CONF_INV_ADDRESS]
         variant = inverter_config[CONF_INV_VARIANT]
-        throttle = inverter_config[CONF_INV_THROTTLE];
         inverter = cg.new_Pvariable(inverter_config[CONF_ID], DeltaSoliviaInverter(address, variant))
 
         # set throttle interval on component, which is used
         # to prevent excessive work when running in gateway mode
-        cg.add(component.set_throttle(throttle));
+        throttle = inverter_config.get(CONF_INV_THROTTLE)
+        if throttle:
+            cg.add(component.set_throttle(throttle))
 
         # create all numerical sensors, each one with a throttle_average filter
         # to prevent overloading HA
         async def make_sensor(field):
-            # create the throttle filter
-#            filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
-#            filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
-#            cg.add(cg.App.register_component(filter))
-#            cg.add(filter.set_component_source('sensor'))
+            filter = None
+            # create the throttle filter if required
+            if throttle:
+                filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
+                filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
+                cg.add(cg.App.register_component(filter))
+                cg.add(filter.set_component_source('sensor'))
 
+            # create sensor
             sens = await sensor.new_sensor(inverter_config[field])
-#            cg.add(sens.add_filters([ filter ]))
 
+            # add filters to sensor
+            if filter:
+                cg.add(sens.add_filters([ filter ]))
+
+            # add sensor to inverter
             cg.add(inverter.add_sensor(field, sens))
 
         async def make_text_sensor(field):
