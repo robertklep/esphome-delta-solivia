@@ -181,18 +181,13 @@ def _validate(config):
         if parser is None:
             raise cv.Invalid(f"Variant {variant} not supported (for inverter with address {address})")
 
-        # throttle should only be used in gateway mode
-        throttle = inverter.get(CONF_INV_THROTTLE)
-        if not has_gateway and throttle:
-            raise cv.Invalid(f"Throttle should only be used in gateway mode (for inverter with address {address})")
-
     return config
 
 INVERTER_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(DeltaSoliviaInverter),
     cv.Required(CONF_INV_ADDRESS): cv.int_range(min = 1),
     cv.Required(CONF_INV_VARIANT): cv.int_range(min = 1, max = 222),
-    cv.Optional(CONF_INV_THROTTLE): cv.update_interval,
+    cv.Optional(CONF_INV_THROTTLE, default = '10s'): cv.update_interval,
     cv.Optional(CONF_INV_PART_NUMBER): text_sensor.text_sensor_schema(),
     cv.Optional(CONF_INV_SERIAL_NUMBER): text_sensor.text_sensor_schema(),
     cv.Optional(CONF_INV_SOLAR_VOLTAGE_INPUT_1): sensor.sensor_schema(
@@ -627,7 +622,7 @@ async def to_code(config):
         # set throttle interval on component, which is used
         # to prevent excessive work when running in gateway mode
         throttle = inverter_config.get(CONF_INV_THROTTLE)
-        if throttle:
+        if has_gateway and throttle:
             cg.add(component.set_throttle(throttle))
 
         # create all numerical sensors, each one with a throttle_average filter
@@ -635,7 +630,7 @@ async def to_code(config):
         async def make_sensor(field):
             filter = None
             # create the throttle filter if required
-            if throttle:
+            if has_gateway and throttle:
                 filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
                 filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
                 cg.add(cg.App.register_component(filter))
