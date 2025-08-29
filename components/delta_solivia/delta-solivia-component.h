@@ -26,8 +26,10 @@ protected:
   GPIOPin* flow_control_pin_{nullptr};
   bool has_gateway_;
 
+  void update_();
+
 public:
-  DeltaSoliviaComponent() : has_gateway_(false), throttle_(10000) {}
+  DeltaSoliviaComponent() : has_gateway_(false), throttle_(0) {}
 
   void set_throttle(unsigned int throttle) { this->throttle_ = throttle; }
   void set_flow_control_pin(GPIOPin* flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }

@@ -158,30 +158,16 @@ void DeltaSoliviaComponent::update_without_gateway() {
     return;
   }
 
+  // really make sure throttling is disabled
   this->set_throttle(0);
-  this->update_with_gateway();
-
-#if 0
-  // absolute maximum packet size
-  uint8_t buffer[262];
-
-  // read packet (XXX: this assumes that the full packet is available in the receive buffer)
-  unsigned int bytes_read = this->available();
-  bool read_success       = this->read_array(buffer, bytes_read);
-
-  if (! read_success) {
-    ESP_LOGD(LOG_TAG, "RESPONSE - unable to read packet");
-    return;
-  }
-
-  // process frame
-  Frame frame(buffer, buffer + bytes_read);
-
-  this->process_frame(frame);
-#endif
+  this->update_();
 }
 
 void DeltaSoliviaComponent::update_with_gateway() {
+  this->update_();
+}
+
+void DeltaSoliviaComponent::update_() {
   // buffer to store serial data
   static Frame frame;
 
@@ -212,7 +198,6 @@ void DeltaSoliviaComponent::update_with_gateway() {
     }
 
     // throttle?
-#if 0
     static unsigned int last_update = 0;
     unsigned int now                = millis();
     if (now - last_update >= this->throttle_) {
@@ -220,8 +205,6 @@ void DeltaSoliviaComponent::update_with_gateway() {
       this->process_frame(frame);
       last_update = millis();
     }
-#endif
-    this->process_frame(frame);
 
     // clear vector for next round
     frame.clear();
