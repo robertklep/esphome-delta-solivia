@@ -69,7 +69,7 @@ esphome:
 
 # Load as external component
 external_components:
-  - source: github://robertklep/esphome-delta-solivia@v3.2.0
+  - source: github://robertklep/esphome-delta-solivia@v3.4.0
     components: [ delta_solivia ]
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
@@ -188,7 +188,7 @@ If you have a Solivia gateway, you need to set the `has_gateway` to `true`. It w
 
 The `update_interval` option of the component serves different purposes depending on whether you have a gateway or not. With a gateway, it will automatically be set to a low value (0.5s) to prevent missing updates sent by the inverters. Without a gateway, it will be the interval at which the component will request a single inverter (in a round-robin fashion) to send an update. The default of 10 seconds should be sufficient, although you can decrease it if you want faster updates or if you have more than one inverter.
 
-The `throttle` option for each inverter will limit the amount of state updates sent back to HA. This is especially relevant if you have a gateway, since it will request updates for each inverter about every second (remember that each state update will also be stored in HA's database). The default throttle interval is 10 seconds. Internally, this is implemented using a [`throttle_average`](https://esphome.io/components/sensor/#throttle-average) filter.
+The `throttle` option for each inverter will limit the amount of state updates sent back to HA. This is only relevant if you have a gateway, since a gateway will request updates for each inverter about every second (remember that each state update will also be stored in HA's database). The default throttle interval is 10 seconds. Internally, this is implemented using a [`throttle_average`](https://esphome.io/components/sensor/#throttle-average) filter. When not using a gateway this setting is ignored.
 
 ## Commands
 
