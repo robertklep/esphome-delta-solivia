@@ -6,7 +6,7 @@ esphome:
     build_flags: '-std=c++17 -std=gnu++17'
 
 external_components:
-  - source: github://robertklep/esphome-delta-solivia@v3.4.0
+  - source: github://robertklep/esphome-delta-solivia@v3.4.1
     components: [ delta_solivia ]
 
 esp32:
