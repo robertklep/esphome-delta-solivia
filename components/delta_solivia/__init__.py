@@ -6,7 +6,6 @@ from esphome.cpp_helpers import gpio_pin_expression
 from esphome.components import uart, sensor, text_sensor
 from esphome.const import (
     CONF_ID,
-    CONF_UART_ID,
     CONF_UPDATE_INTERVAL,
     CONF_FLOW_CONTROL_PIN,
     DEVICE_CLASS_CURRENT,
@@ -21,7 +20,6 @@ from esphome.const import (
     STATE_CLASS_TOTAL_INCREASING,
     UNIT_WATT,
     UNIT_WATT_HOURS,
-    UNIT_KILOWATT,
     UNIT_KILOWATT_HOURS,
     UNIT_VOLT,
     UNIT_AMPERE,
@@ -160,8 +158,7 @@ def _parser_for_variant(variant):
     return None
 
 def _validate(config):
-    has_gateway = config[CONF_HAS_GATEWAY]
-    inverters   = config[CONF_INVERTERS]
+    inverters = config[CONF_INVERTERS]
 
     if len(inverters) < 1:
         raise cv.Invalid("Need at least one inverter to be configured")
@@ -625,41 +622,18 @@ async def to_code(config):
         if has_gateway and throttle:
             cg.add(component.set_throttle(throttle))
 
-        # create all numerical sensors, each one with a throttle_average filter
-        # to prevent overloading HA
-        async def make_sensor(field):
-            filter = None
-            # create the throttle filter if required
-            if has_gateway and throttle:
-                filter_id = cv.declare_id(sensor.ThrottleAverageFilter)(f'{field}_{address}')
-                filter = cg.new_Pvariable(filter_id, sensor.ThrottleAverageFilter(throttle))
-                cg.add(cg.App.register_component(filter))
-                cg.add(filter.set_component_source('sensor'))
-
-            # create sensor
-            sens = await sensor.new_sensor(inverter_config[field])
-
-            # add filters to sensor
-            if filter:
-                cg.add(sens.add_filters([ filter ]))
-
-            # add sensor to inverter
-            cg.add(inverter.add_sensor(field, sens))
-
-        async def make_text_sensor(field):
-            sens = await text_sensor.new_text_sensor(inverter_config[field])
-            cg.add(inverter.add_text_sensor(field, sens))
-
         # add all configured sensors and text sensors to the inverter instance
         for field_name in inverter_config:
             field_value = inverter_config.get(field_name)
             try:
-                sensor_type = str(field_value.get('id').type);
+                sensor_type = str(field_value.get('id').type)
                 if sensor_type == 'sensor::Sensor':
-                    await make_sensor(field_name)
+                    sens = await sensor.new_sensor(inverter_config[field_name])
+                    cg.add(inverter.add_sensor(field_name, sens))
                 elif sensor_type == 'text_sensor::TextSensor':
-                    await make_text_sensor(field_name)
-            except Exception as e:
+                    sens = await text_sensor.new_text_sensor(inverter_config[field_name])
+                    cg.add(inverter.add_text_sensor(field_name, sens))
+            except Exception:
                 pass
 
         # add inverter to component
