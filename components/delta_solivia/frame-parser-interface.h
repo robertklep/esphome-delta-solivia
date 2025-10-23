@@ -65,6 +65,8 @@ public:
   void set_publish_text_sensor(PublishTextSensorHandler publish_text_sensor) {
     this->publish_text_sensor_ = publish_text_sensor;
   }
+
+  static bool supports(uint8_t);
 };
 
 }

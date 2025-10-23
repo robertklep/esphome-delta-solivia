@@ -9,8 +9,6 @@ namespace delta_solivia {
 class FrameParserVariant15 : public IFrameParser {
 protected:
   void parse_frame_(const uint8_t* frame, std::size_t pos) override {
-    unsigned start = millis();
-
     // XXX: sensor names should match `CONF_INV_*` values in __init__.py
     this->publish_text_sensor_(CONF_INV_PART_NUMBER, this->parse_string(frame, pos, 11));
     pos += 11;
@@ -359,6 +357,15 @@ protected:
   }
 public:
   FrameParserVariant15() {}
+
+  static bool supports(uint8_t variant) {
+    return (
+      variant == 15 || variant == 18 || variant == 19 || variant == 20 ||
+      variant == 31 || variant == 34 || variant == 35 || variant == 36 ||
+      variant == 38 || variant == 39 || variant == 55 || variant == 58 ||
+      variant == 59 || variant == 60
+    );
+  }
 };
 
 }

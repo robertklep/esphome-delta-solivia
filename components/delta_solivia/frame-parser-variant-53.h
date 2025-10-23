@@ -212,6 +212,17 @@ protected:
   }
 public:
   FrameParserVariant53() {}
+
+  static bool supports(uint8_t variant) {
+    return (
+      variant == 53 || variant == 73 || variant == 102 || variant == 103 ||
+      variant == 105 || variant == 106 || variant == 107 || variant == 109 ||
+      variant == 110 || variant == 111 || variant == 113 || variant == 114 ||
+      variant == 120 || variant == 121 || variant == 122 || variant == 123 ||
+      variant == 124 || variant == 125 || variant == 158 || variant == 159 ||
+      variant == 160 || variant == 161
+    );
+  }
 };
 
 }

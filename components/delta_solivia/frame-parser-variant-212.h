@@ -145,6 +145,10 @@ protected:
   }
 public:
   FrameParserVariant212() {}
+
+  static bool supports(uint8_t variant) {
+    return variant >= 212 && variant <= 222;
+  }
 };
 
 }
