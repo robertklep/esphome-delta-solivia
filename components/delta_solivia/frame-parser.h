@@ -3,6 +3,7 @@
 #include <memory>
 #include "frame-parser-interface.h"
 #include "frame-parser-variant-15.h"
+#include "frame-parser-variant-27.h"
 #include "frame-parser-variant-53.h"
 #include "frame-parser-variant-212.h"
 
@@ -19,6 +20,9 @@ public:
     }
     if (FrameParserVariant53::supports(variant)) {
       return std::make_unique<FrameParserVariant53>();
+    }
+    if (FrameParserVariant27::supports(variant)) {
+      return std::make_unique<FrameParserVariant27>();
     }
     if (FrameParserVariant212::supports(variant)) {
       return std::make_unique<FrameParserVariant212>();
