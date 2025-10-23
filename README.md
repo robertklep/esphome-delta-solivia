@@ -233,16 +233,16 @@ switch:
 | 18     | SOLIVIA 3.0 EU G3         | ✅        | " |
 | 19     | SOLIVIA 3.3 EU G3         | ✅        | " |
 | 20     | SOLIVIA 3.6 EU G3         | ✅        | " |
-| 27     | SOLIVIA 15 EU TL          | ❌        |        |
-| 28     | SOLIVIA 20 EU TL          | ❌        |        |
+| 27     | SOLIVIA 15 EU TL          | ✅        | Variant27 |
+| 28     | SOLIVIA 20 EU TL          | ✅        | "       |
 | 31     | SOLIVIA 2.5 NA G4         | ✅        | Variant15 |
 | 34     | SOLIVIA 3.0 NA G4         | ✅        | " |
 | 35     | SOLIVIA 3.3 NA G4         | ✅        | " |
 | 36     | SOLIVIA 3.6 NA G4         | ✅        | " |
 | 38     | SOLIVIA 4.4 NA G4         | ✅        | " |
 | 39     | SOLIVIA 5.0 NA G4         | ✅        | " |
-| 43     | SOLIVIA 15 EU TL G4       | ❌        |        |
-| 44     | SOLIVIA 20 EU TL G4       | ❌        |        |
+| 43     | SOLIVIA 15 EU TL G4       | ✅        | Variant27 |
+| 44     | SOLIVIA 20 EU TL G4       | ✅        | "       |
 | 55     | SOLIVIA 2.5 AP G3         | ✅        | Variant15 |
 | 58     | SOLIVIA 3.0 AP G3         | ✅        | " |
 | 59     | SOLIVIA 3.3 AP G3         | ✅        | " |
@@ -250,11 +250,11 @@ switch:
 | 63     | SOLIVIA 5.0 AP G3         | ❌        |        |
 | 85     | SOLIVIA 3.0 EU T4 TL      | ❌        |        |
 | 88     | SOLIVIA 5.0 EU T4 TL      | ❌        |        |
-| 89     | SOLIVIA 6.0 EU T4 TL      | ❌        |        |
-| 90     | SOLIVIA 8.0 EU T4 TL      | ❌        |        |
-| 91     | SOLIVIA 10 EU T4 TL       | ❌        |        |
-| 93     | SOLIVIA 12 EU T4 TL       | ❌        |        |
-| 95     | SOLIVIA 30 EU T4 TL       | ❌        |        |
+| 89     | SOLIVIA 6.0 EU T4 TL      | ✅        | Variant27 |
+| 90     | SOLIVIA 8.0 EU T4 TL      | ✅        | "       |
+| 91     | SOLIVIA 10 EU T4 TL       | ✅        | "       |
+| 93     | SOLIVIA 12 EU T4 TL       | ✅        | "       |
+| 95     | SOLIVIA 30 EU T4 TL       | ✅        | "       |
 | 99     | SOLIVIA CS                | ❌        |        |
 | 100    | SOLIVIA CM                | ❌        |        |
 | 102    | SOLIVIA 2.0 EU G4 TR      | ✅        | Variant53 |
@@ -277,13 +277,13 @@ switch:
 | 159    | DELTA 15 TL               | ✅        | "      |
 | 160    | DELTA 28 TL               | ✅        | "      |
 | 161    | DELTA 24 TL               | ✅        | "      |
-| 200    | RPI M6                    | ❌        |        |
-| 201    | RPI M8                    | ❌        |        |
-| 202    | RPI M10                   | ❌        |        |
-| 203    | RPI M12                   | ❌        |        |
-| 204    | RPI M15A                  | ❌        |        |
-| 205    | RPI M20A                  | ❌        |        |
-| 206    | RPI M30                   | ❌        |        |
+| 200    | RPI M6                    | ✅        | Variant27       |
+| 201    | RPI M8                    | ✅        | "       |
+| 202    | RPI M10                   | ✅        | "      |
+| 203    | RPI M12                   | ✅        | "       |
+| 204    | RPI M15A                  | ✅        | "        |
+| 205    | RPI M20A                  | ✅        | "        |
+| 206    | RPI M30                   | ✅        | "       |
 | 207    | RPI H3                    | ❌        |        |
 | 208    | RPI H5                    | ❌        |        |
 | 209    | RPI H3A                   | ❌        |        |
@@ -401,7 +401,7 @@ runtime_today
 inverter_status
 ```
 
-### Variant 212
+### Variants 27 and 212
 
 ```
 part_number
@@ -430,4 +430,3 @@ runtime_total
 supplied_ac_energy_today
 supplied_ac_energy_total
 ```
-

@@ -13,6 +13,8 @@ esp32:
   # look here for more information on board ID's:
   # https://esphome.io/components/esp32.html#esp32-platform
   board: YOUR_BOARD_TYPE
+  framework:
+    type: esp-idf
 
 # enable logging (entirely optional)
 logger:
