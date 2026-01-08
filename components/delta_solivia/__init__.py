@@ -146,6 +146,7 @@ CONF_INV_NEUTRAL_ERRORS            = "inverter_neutral_errors"
 
 # supported variants and their parser
 SUPPORTED_VARIANTS = {
+    ( 4, 14, 63 ): 'Variant4Parser',
     ( 15, 18, 19, 20, 31, 34, 35, 36, 38, 39, 55, 58, 59, 60 ): 'Variant15Parser',
     ( 27, 28, 43, 44, 89, 90, 91, 93, 95, 200, 201, 202, 203, 204, 205, 206 ) : 'Variant27Parser',
     ( 53, 73, 102, 103, 105, 106, 107, 109, 110, 111, 113, 114, 120, 121, 122, 123, 124, 125, 158, 159, 160, 161 ) : 'Variant53Parser',

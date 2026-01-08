@@ -225,10 +225,10 @@ switch:
 |--------|----------------------------|-----------|--------|
 | 1      | SI 2500                   | ❌        |        |
 | 3      | SI 3300                   | ❌        |        |
-| 4      | SI 5000                   | ❌        |        |
+| 4      | SI 5000                   | ✅        | Variant4 |
 | 9      | SOLIVIA 2.0 EU G3         | ❌        |        |
 | 11     | SI 11kW (3 phases module of CM/CS) | ❌ |        |
-| 14     | SOLIVIA 5.0 EU G3         | ❌        |        |
+| 14     | SOLIVIA 5.0 EU G3         | ✅        | Variant4 |
 | 15     | SOLIVIA 2.5 EU G3         | ✅        | Variant15 |
 | 18     | SOLIVIA 3.0 EU G3         | ✅        | " |
 | 19     | SOLIVIA 3.3 EU G3         | ✅        | " |
@@ -247,7 +247,7 @@ switch:
 | 58     | SOLIVIA 3.0 AP G3         | ✅        | " |
 | 59     | SOLIVIA 3.3 AP G3         | ✅        | " |
 | 60     | SOLIVIA 3.6 AP G3         | ✅        | " |
-| 63     | SOLIVIA 5.0 AP G3         | ❌        |        |
+| 63     | SOLIVIA 5.0 AP G3         | ✅        | Variant4 |
 | 85     | SOLIVIA 3.0 EU T4 TL      | ❌        |        |
 | 88     | SOLIVIA 5.0 EU T4 TL      | ❌        |        |
 | 89     | SOLIVIA 6.0 EU T4 TL      | ✅        | Variant27 |

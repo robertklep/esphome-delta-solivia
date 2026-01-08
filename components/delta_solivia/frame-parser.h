@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "frame-parser-interface.h"
+#include "frame-parser-variant-4.h"
 #include "frame-parser-variant-15.h"
 #include "frame-parser-variant-27.h"
 #include "frame-parser-variant-53.h"
@@ -15,6 +16,9 @@ using FrameParser = std::unique_ptr<IFrameParser>;
 class FrameParserFactory {
 public:
   static FrameParser create_parser(uint8_t variant) {
+    if (FrameParserVariant4::supports(variant)) {
+      return std::make_unique<FrameParserVariant4>();
+    }
     if (FrameParserVariant15::supports(variant)) {
       return std::make_unique<FrameParserVariant15>();
     }
