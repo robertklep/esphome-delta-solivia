@@ -71,6 +71,7 @@ esphome:
 external_components:
   - source: github://robertklep/esphome-delta-solivia@v3.6.1
     components: [ delta_solivia ]
+    refresh: never
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
 uart:
