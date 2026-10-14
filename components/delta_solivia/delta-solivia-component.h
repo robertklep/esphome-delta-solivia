@@ -21,15 +21,15 @@ using Frame       = std::vector<uint8_t>;
 
 class DeltaSoliviaComponent : public PollingComponent, public UARTDevice {
 protected:
-  unsigned int throttle_;
+  unsigned int throttle_{0};
   InverterMap inverters_;
   GPIOPin* flow_control_pin_{nullptr};
-  bool has_gateway_;
+  bool has_gateway_{false};
 
   void update_();
 
 public:
-  DeltaSoliviaComponent() : has_gateway_(false), throttle_(0) {}
+  DeltaSoliviaComponent() = default;
 
   void set_throttle(unsigned int throttle) { this->throttle_ = throttle; }
   void set_flow_control_pin(GPIOPin* flow_control_pin) { this->flow_control_pin_ = flow_control_pin; }

@@ -214,7 +214,7 @@ void DeltaSoliviaComponent::update_() {
 
 void DeltaSoliviaComponent::set_power_limit(uint8_t pct, uint8_t address) {
   if (pct > 100) {
-    ESP_LOGE(LOG_TAG, "POWER LIMIT - percentage should be <= 100% (value: %u%%)", pct);
+    ESP_LOGE(LOG_TAG, "POWER LIMIT - percentage should be <= 100%% (value: %u%%)", pct);
     return;
   }
   ESP_LOGD(LOG_TAG, "POWER LIMIT - setting limit to %u%% for address %02X (0xFF = all inverters)", pct, address);
