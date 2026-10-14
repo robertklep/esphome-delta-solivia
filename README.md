@@ -69,7 +69,7 @@ esphome:
 
 # Load as external component
 external_components:
-  - source: github://robertklep/esphome-delta-solivia@v3.6.0
+  - source: github://robertklep/esphome-delta-solivia@v3.6.1
     components: [ delta_solivia ]
 
 # UART setup (change tx_pin/rx_pin if required, leave the rest as-is)
@@ -201,7 +201,7 @@ This command can be used to limit the output power of the inverter with address 
 It can be used, for instance, with a template switch setup:
 ```
 delta_solivia:
-  id: my_delta_solivia   # references in the switch setup below
+  id: my_delta_solivia   # referenced in the switch setup below
   uart_id: solivia_uart
   ...
 
